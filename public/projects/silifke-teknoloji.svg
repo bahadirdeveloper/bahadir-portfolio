@@ -1,0 +1,53 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#1e293b"/>
+  
+  <!-- Tech Grid Pattern -->
+  <defs>
+    <pattern id="techGrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3b82f6" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="300" fill="url(#techGrid)"/>
+  
+  <!-- Central Tech Icon -->
+  <g transform="translate(200, 150)">
+    <!-- Circuit Board Background -->
+    <circle cx="0" cy="0" r="80" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
+    
+    <!-- Circuit Lines -->
+    <path d="M -60 -40 L -40 -40 L -40 -20 L -20 -20 L -20 0 L 0 0 L 0 20 L 20 20 L 20 40 L 40 40 L 40 60" 
+          fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Tech Nodes -->
+    <circle cx="-60" cy="-40" r="4" fill="#10b981"/>
+    <circle cx="-40" cy="-40" r="4" fill="#3b82f6"/>
+    <circle cx="-40" cy="-20" r="4" fill="#10b981"/>
+    <circle cx="-20" cy="-20" r="4" fill="#3b82f6"/>
+    <circle cx="-20" cy="0" r="4" fill="#10b981"/>
+    <circle cx="0" cy="0" r="4" fill="#3b82f6"/>
+    <circle cx="0" cy="20" r="4" fill="#10b981"/>
+    <circle cx="20" cy="20" r="4" fill="#3b82f6"/>
+    <circle cx="20" cy="40" r="4" fill="#10b981"/>
+    <circle cx="40" cy="40" r="4" fill="#3b82f6"/>
+    <circle cx="40" cy="60" r="4" fill="#10b981"/>
+    
+    <!-- Central Hub -->
+    <circle cx="0" cy="0" r="15" fill="#1e40af" stroke="#60a5fa" stroke-width="2"/>
+    <text x="0" y="5" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">ST</text>
+  </g>
+  
+  <!-- Floating Tech Elements -->
+  <g opacity="0.7">
+    <!-- Code Brackets -->
+    <text x="50" y="80" fill="#3b82f6" font-family="monospace" font-size="24" font-weight="bold">{ }</text>
+    <text x="320" y="220" fill="#10b981" font-family="monospace" font-size="24" font-weight="bold">[ ]</text>
+    
+    <!-- Binary -->
+    <text x="70" y="250" fill="#64748b" font-family="monospace" font-size="12">101010</text>
+    <text x="300" y="70" fill="#64748b" font-family="monospace" font-size="12">010101</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="200" y="280" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">SİLİFKE TEKNOLOJİ</text>
+</svg>

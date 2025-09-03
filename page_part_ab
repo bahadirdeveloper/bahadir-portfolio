@@ -1,0 +1,400 @@
+  }
+
+  return (
+    <div ref={containerRef} className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Splash Cursor */}
+      <SplashCursor />
+
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg">
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <img
+              src={portfolioData.header.logo}
+              alt="Logo"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full ring-2 ring-blue-500/20"
+            />
+            <span className="font-black text-lg sm:text-xl md:text-2xl tracking-tight text-gray-900 truncate">
+              {portfolioData.header.title}
+            </span>
+          </div>
+          
+          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+            {portfolioData.header.menu.map((item, index) => (
+              <button
+                key={item}
+                onClick={() => scrollToSection(index + 1)}
+                className={`text-sm font-semibold transition-all duration-300 hover:text-blue-600 modern-focus relative group ${
+                  currentSection === index + 1 ? "text-blue-600" : "text-gray-700"
+                }`}
+              >
+                {item}
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full ${
+                  currentSection === index + 1 ? "w-full" : ""
+                }`}></span>
+              </button>
+            ))}
+          </nav>
+
+          {/* Mobile menu button */}
+          <button 
+            className="md:hidden p-2 text-gray-700 hover:text-blue-600 modern-focus rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Menüyü aç"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden bg-white border-t border-gray-200/50 overflow-hidden"
+            >
+              <div className="px-4 py-4 space-y-3">
+                {portfolioData.header.menu.map((item, index) => (
+                  <button
+                    key={item}
+                    onClick={() => {
+                      scrollToSection(index + 1)
+                      setIsMobileMenuOpen(false)
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors hover:bg-gray-50 ${
+                      currentSection === index + 1 ? "text-blue-600 bg-blue-50" : "text-gray-700"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23e5e7eb" fill-opacity="0.3"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+        
+        {/* Floating Messages - Hidden on mobile */}
+        <div className="absolute left-4 sm:left-8 top-1/2 transform -translate-y-1/2 space-y-4 hidden lg:block">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentMessage}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.5 }}
+              className="floating-message bg-white/80 backdrop-blur-md rounded-xl p-4 max-w-xs shadow-lg border border-gray-200/50"
+            >
+              <p className="text-sm text-gray-700 font-medium">{portfolioData.hero.leftMessages[currentMessage]}</p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Main Content */}
+        <div className="relative z-10 text-center hero-content px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="mb-8 sm:mb-12"
+          >
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black mb-6 text-optimized">
+              <span className="block bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
+                {portfolioData.hero.name.split(' ')[0]}
+              </span>
+              <span className="block bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                {portfolioData.hero.name.split(' ')[1]}
+              </span>
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 sm:mb-8 max-w-4xl mx-auto font-medium">
+              {portfolioData.hero.title}
+            </p>
+          </motion.div>
+
+          {/* Motivational Quote */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuote}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl mx-auto mb-8 sm:mb-12"
+            >
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-gray-200/50">
+                <p className="text-lg sm:text-xl text-gray-700 italic font-medium">
+                  "{portfolioData.hero.motivationalQuotes[currentQuote]}"
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center"
+          >
+            <button
+              onClick={() => scrollToSection(1)}
+              className="group w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 sm:px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl modern-focus"
+            >
+              <span className="flex items-center gap-2">
+                Hakkımda
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+            </button>
+            <button
+              onClick={() => scrollToSection(4)}
+              className="group w-full sm:w-auto bg-white/90 backdrop-blur-md hover:bg-white text-gray-800 px-8 sm:px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-gray-200/50 modern-focus"
+            >
+              <span className="flex items-center gap-2">
+                Projelerimi Gör
+                <ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+              </span>
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        >
+          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-gray-400 rounded-full mt-2"></div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* About Section */}
+      <section className="py-20 sm:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            {/* Photo */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative order-2 md:order-1"
+            >
+              <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur-2xl opacity-20"></div>
+                <img
+                  src={portfolioData.about.photo}
+                  alt="Bahadır Gemalmaz"
+                  className="relative w-full h-full object-cover rounded-full border-4 border-blue-200/50 gpu-accelerated shadow-2xl"
+                />
+              </div>
+            </motion.div>
+
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6 sm:space-y-8 order-1 md:order-2 text-center md:text-left"
+            >
+              <div className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-4">
+                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                Web Tasarımcısı & Otomasyon Uzmanı
+              </div>
+              
+              <h2 className="text-4xl sm:text-5xl font-black mb-6 text-gray-900">Hakkımda</h2>
+              
+              {portfolioData.about.description.map((paragraph, index) => (
+                <p key={index} className="text-lg sm:text-xl text-gray-600 leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+
+              {/* Social Links */}
+              <div className="flex justify-center md:justify-start space-x-4 pt-6">
+                {portfolioData.about.socials.github && (
+                  <a
+                    href={portfolioData.about.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-3 bg-gray-100 hover:bg-blue-100 rounded-xl transition-all duration-300 modern-focus"
+                    aria-label="GitHub profili"
+                  >
+                    <Github className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                  </a>
+                )}
+                {portfolioData.about.socials.linkedin && (
+                  <a
+                    href={portfolioData.about.socials.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-3 bg-gray-100 hover:bg-blue-100 rounded-xl transition-all duration-300 modern-focus"
+                    aria-label="LinkedIn profili"
+                  >
+                    <Linkedin className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                  </a>
+                )}
+                {portfolioData.about.socials.email && (
+                  <a
+                    href={`mailto:${portfolioData.about.socials.email}`}
+                    className="group p-3 bg-gray-100 hover:bg-blue-100 rounded-xl transition-all duration-300 modern-focus"
+                    aria-label="E-posta gönder"
+                  >
+                    <Mail className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                  </a>
+                )}
+                {portfolioData.about.socials.cv && (
+                  <a
+                    href={portfolioData.about.socials.cv}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-3 bg-gray-100 hover:bg-blue-100 rounded-xl transition-all duration-300 modern-focus"
+                    aria-label="CV indir"
+                  >
+                    <ExternalLink className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                  </a>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* VIP References Section */}
+      <section className="py-20 bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden vip-section relative">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-pink-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              VIP Referanslar
+            </h2>
+            <p className="text-xl md:text-2xl text-white/70 font-medium">Güvenilen markaların tercihi</p>
+          </motion.div>
+
+          {/* Scrolling References */}
+          <div className="relative mb-20">
+            <div className="flex overflow-hidden">
+              <motion.div
+                className="flex whitespace-nowrap scrolling-references"
+                animate={{
+                  x: [0, -2000],
+                }}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 60,
+                    ease: "linear",
+                  },
+                }}
+              >
+                {/* First set of references */}
+                <div className="flex items-center space-x-12 text-white text-xl font-medium">
+                  <a 
+                    href="https://www.simayhareketi.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.simayhareketi.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.effemimarlik.com.tr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.effemimarlik.com.tr
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.vertexyapi.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.vertexyapi.com
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.avaxsavunma.com.tr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.avaxsavunma.com.tr
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.mahallepanosu.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.mahallepanosu.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://simay.tech" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    simay.tech
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.silifketeknoloji.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.silifketeknoloji.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.bahadirgemalmaz.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.bahadirgemalmaz.com
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                </div>
+                
+                {/* Second set for seamless loop */}
+                <div className="flex items-center space-x-12 text-white text-xl font-medium ml-12">
+                  <a 
+                    href="https://www.simayhareketi.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.simayhareketi.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.effemimarlik.com.tr" 

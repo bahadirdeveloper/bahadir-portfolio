@@ -31,1033 +31,1650 @@ if (typeof window !== "undefined") {
 
 export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const heroRef = useRef<HTMLDivElement>(null)
-  const aboutRef = useRef<HTMLDivElement>(null)
-  const skillsRef = useRef<HTMLDivElement>(null)
-  const projectsRef = useRef<HTMLDivElement>(null)
-  const [showHeader, setShowHeader] = useState(true);
-  const lastScrollY = useRef(0);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const [skillTab, setSkillTab] = useState(0);
-  // --- Custom blue glowing cursor for hero section ---
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [showHeroCursor, setShowHeroCursor] = useState(false);
-  const heroCursorRef = useRef<HTMLDivElement>(null);
-  const [trailPos, setTrailPos] = useState({ x: 0, y: 0 });
-  const [showHeroBlob, setShowHeroBlob] = useState(false);
-  const animationRef = useRef<number | null>(null);
-  // Splash cursor state for hero section
-  const [splashPos, setSplashPos] = useState<{ x: number; y: number } | null>(null);
-  const splashRef = useRef<HTMLDivElement>(null);
+  const [currentSection, setCurrentSection] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState(0)
+  const [currentQuote, setCurrentQuote] = useState(0)
+  const [currentMessage, setCurrentMessage] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   const { scrollYProgress } = useScroll()
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"])
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
 
-  const motivationalQuotes = [
-    "Success is not final, failure is not fatal: It is the courage to continue that counts.",
-    "Dream big and dare to fail.",
-    "The only way to do great work is to love what you do.",
-    "Don't watch the clock; do what it does. Keep going.",
-    "Great things never come from comfort zones.",
-    "Believe you can and you're halfway there.",
-    "Push yourself, because no one else is going to do it for you.",
-    "Opportunities don't happen, you create them.",
-    "Don't stop when you're tired. Stop when you're done.",
-    "The harder you work for something, the greater you'll feel when you achieve it."
-  ];
-  const [quoteIndex, setQuoteIndex] = useState(0);
+  // Portfolio Data - Türkçe içerik
+  const portfolioData = {
+    header: {
+      logo: "/profile.png",
+      title: "Bahadır'ın Portfolyosu",
+      menu: ["Hakkımda", "Yetenekler", "Projeler", "Referanslar", "İletişim"]
+    },
+    hero: {
+      name: "Bahadır Gemalmaz",
+      title: "Web Tasarımcısı & Otomasyon Uzmanı",
+      leftMessages: [
+        "Kahvemi bitirmeden kod yazmam",
+        "Pixel-perfect mi? Başka türlüsü var mıydı?",
+        "Bir web sitesi 3 saniyede açılmazsa, o site benim değildir",
+        "Tasarımda sadelik bir sanattır",
+        "Düğmeye basınca çalışmıyorsa... neden orada?",
+        "Gece 3'te deploy mu? Neden olmasın",
+        "Kod yazmak meditasyondur",
+        "Her sorun bir çözümle gelir",
+        "Figma açmadan gün başlamaz",
+        "React gibi sevilen bir şey varsa, o da kahve",
+        "Sade ama etkileyici... tıpkı sitelerim gibi",
+        "Otobüste bile tasarım düşünen adam",
+        "Açıklamasız commit yapmam",
+        "Yazılımda detay, hayatta zarafettir",
+        "İyi bir arayüz, kötü bir fikri bile kurtarır",
+        "Görselliği seviyorum ama hızdan taviz vermem"
+      ],
+      motivationalQuotes: [
+        "Her fikir, kodla can bulur",
+        "Bugünün çabası, yarının referansı",
+        "Sadelik, ustalığın göstergesidir",
+        "Hayal et, tasarla, uygula",
+        "Bir satır kod, bin kelimeye bedeldir",
+        "Düşünen geliştirici, üreten sanatçıdır",
+        "Disiplin, yetenekten daha etkilidir",
+        "Tasarım; ne eklediğin değil, neyi çıkardığındır",
+        "Zaman geçer ama iyi kod kalır",
+        "Bir gülümseme için tasarla, hız için kodla"
+      ]
+    },
+    about: {
+      photo: "/profile.png",
+      description: [
+        "Merhaba, ben Bahadır. Web tasarımı ve otomasyon alanlarında uzmanlaşmış, sade ve işlevsel çözümler geliştiren bir geliştiriciyim. Müşterilerime hızlı, güvenilir ve ihtiyaçlara özel dijital yapılar sunarken; her projeye tutkuyla yaklaşırım.",
+        "Aynı zamanda Silifke Teknoloji Kulübü'nün kurucusuyum. Burada gençlerle birlikte \"vibe coding\" kültürüyle projeler geliştiriyor, yereldeki sorunları teknolojiyle çözüme dönüştürüyoruz. Amacımız; hem motivasyon hem gelir sağlayan, aynı zamanda milyon dolarlık potansiyele sahip fikirleri hayata geçirmek.",
+        "Benim için teknoloji yalnızca bir iş değil; birlikte üretmenin, öğrenmenin ve büyümenin yolu. Doğru ekiple bir araya geldiğimizde, deniz kenarında kahvemizi yudumlarken bile dünyayı değiştirecek fikirler geliştirebileceğimize inanıyorum."
+      ],
+      socials: {
+        github: "",
+        linkedin: "",
+        email: "",
+        cv: "/cv.pdf"
+      },
+      references: [
+        "https://www.simayhareketi.org",
+        "https://www.effemimarlik.com.tr",
+        "https://www.avaxsavunma.com.tr",
+        "https://www.simayhareketi.com"
+      ]
+    },
+    experience: {
+      stats: [
+        {"icon": "📁", "count": 7, "label": "Tamamlanan Proje"},
+        {"icon": "👥", "count": 7, "label": "Mutlu Müşteri"},
+        {"icon": "⏳", "count": 2, "label": "Yıllık Deneyim"},
+        {"icon": "🚀", "count": 3, "label": "Aktif Proje"}
+      ],
+      tabs: ["Web Tasarımı", "Otomasyon Sistemleri", "Danışmanlık"]
+    },
+    skills: {
+      technical: {
+        "Frontend Geliştirme": ["HTML", "CSS", "JavaScript", "React"],
+        "Tasarım & UX": ["Figma", "Photoshop", "Canva"],
+        "Altyapı & Otomasyon": ["Node.js", "Firebase", "Supabase"],
+        "Animasyon & Etkileşim": ["Framer Motion", "GSAP"]
+      },
+      softSkills: [
+      { name: "Problem Çözme", description: "Sorunlardan Fırsat Yaratma", icon: "💡" },
+      { name: "Takım Çalışması", description: "Kolektif Üretim", icon: "🤝" },
+      { name: "Zaman Yönetimi", description: "Hızlı MVP Çıkartma", icon: "⚡" },
+      { name: "Yaratıcılık", description: "Startup Vibe", icon: "🚀" },
+      { name: "İletişim", description: "Topluluk İnşası", icon: "🌐" },
+      { name: "Adaptasyon", description: "Yeni Teknolojilere Hızlı Uyum", icon: "🔄" },
+      { name: "Analitik Düşünme", description: "Veri Odaklı Yaklaşım", icon: "📊" },
+      { name: "Kritik Düşünme", description: "Stratejik Bakış", icon: "🎯" }
+    ],
+      tools: {
+        "🚀 Geliştirme & Yayınlama": ["VSCode", "Cursor", "Git", "Vercel", "Netlify", "Supabase"],
+        "⚡ Otomasyon & Tasarım": ["n8n", "ChatGPT", "Figma", "Postman"]
+      }
+    },
+    projects: {
+      featured: [
+        {
+          title: "Effe Mimarlık",
+          description: "Site ve villa projeleri için kurumsal web sitesi",
+          image: "/projects/effe-mimarlik.svg",
+          link: "https://www.effemimarlik.com.tr",
+          tech: ["WordPress", "PHP", "CSS", "Responsive Design"],
+          category: "Kurumsal Web Sitesi",
+          status: "Tamamlandı"
+        },
+        {
+          title: "Vertex Yapı",
+          description: "Kaba inşaat firması için profesyonel web sitesi",
+          image: "/projects/vertex-yapi.svg",
+          link: "https://www.vertexyapi.com",
+          tech: ["React", "Next.js", "Tailwind CSS", "SEO"],
+          category: "Kurumsal Web Sitesi",
+          status: "Tamamlandı"
+        },
+        {
+          title: "Avax Savunma",
+          description: "Askeri outdoor giyim firması için e-ticaret sitesi",
+          image: "/projects/avax-savunma.svg",
+          link: "https://www.avaxsavunma.com.tr",
+          tech: ["React", "Node.js", "MongoDB", "E-commerce"],
+          category: "E-ticaret Sitesi",
+          status: "Tamamlandı"
+        },
+        {
+          title: "Simay.tech",
+          description: "Web sitesi ve yapay zeka sesli asistan otomasyon sistemleri",
+          image: "/projects/simay-tech.svg",
+          link: "https://simay.tech",
+          tech: ["AI/ML", "React", "Python", "Automation"],
+          category: "AI & Otomasyon",
+          status: "Tamamlandı"
+        },
+        {
+          title: "Bahadır Gemalmaz",
+          description: "Kişisel portfolyo ve profesyonel web sitesi",
+          image: "/projects/bahadir-portfolio.svg",
+          link: "https://www.bahadirgemalmaz.com",
+          tech: ["Next.js", "React", "Tailwind CSS", "GSAP"],
+          category: "Portfolyo Sitesi",
+          status: "Tamamlandı"
+        },
+        {
+          title: "Silifke Teknoloji",
+          description: "Teknoloji ve inovasyon odaklı organizasyon web sitesi",
+          image: "/projects/silifke-teknoloji.svg",
+          link: "https://www.silifketeknoloji.org",
+          tech: ["Next.js", "React", "Tailwind CSS", "Modern Web"],
+          category: "Teknoloji Organizasyonu",
+          status: "Tamamlandı"
+        }
+      ]
+    },
+    testimonials: [
+      {
+        name: "Ahmet Yılmaz",
+        role: "Simay Hareketi Başkanı",
+        content: "Bahadır'ın profesyonel yaklaşımı ve kaliteli işi sayesinde hayalimizdeki web sitesine kavuştuk. Süreç boyunca her adımda bizi bilgilendirdi ve beklentilerimizi aştı.",
+        avatar: "/placeholder-user.jpg",
+        rating: 5,
+        company: "Simay Hareketi"
+      },
+      {
+        name: "Ayşe Demir",
+        role: "Effe Mimarlık Kurucusu",
+        content: "Hızlı, güvenilir ve yaratıcı çözümler. Mimarlık firmamız için mükemmel bir web sitesi tasarladı. Müşteri memnuniyetimiz %100 arttı.",
+        avatar: "/placeholder-user.jpg",
+        rating: 5,
+        company: "Effe Mimarlık"
+      },
+      {
+        name: "Mehmet Kaya",
+        role: "Avax Savunma CEO",
+        content: "Teknik bilgisi ve müşteri odaklı yaklaşımı ile beklentilerimizi aştı. E-ticaret sitemiz satışlarımızı %300 artırdı. Kesinlikle tavsiye ederim.",
+        avatar: "/placeholder-user.jpg",
+        rating: 5,
+        company: "Avax Savunma"
+      },
+      {
+        name: "Fatma Özkan",
+        role: "Vertex Yapı Genel Müdürü",
+        content: "İnşaat sektöründe dijital varlığımızı güçlendirdi. Profesyonel yaklaşım ve kaliteli iş. Müşterilerimiz artık bizi daha kolay bulabiliyor.",
+        avatar: "/placeholder-user.jpg",
+        rating: 5,
+        company: "Vertex Yapı"
+      },
+      {
+        name: "Ali Yıldız",
+        role: "Simay.tech Kurucusu",
+        content: "AI ve otomasyon projelerimizde müthiş bir iş çıkardı. Teknik bilgisi ve yaratıcılığı ile projelerimizi hayata geçirdi. Gerçek bir uzman.",
+        avatar: "/placeholder-user.jpg",
+        rating: 5,
+        company: "Simay.tech"
+      },
+      {
+        name: "Teknoloji Meraklıları",
+        role: "Silifke Teknoloji Kulübü Üyeleri",
+        content: "Bahadır'ın liderliğinde teknoloji projelerimizi hayata geçirdik. Hem öğrendik hem ürettik. Gerçek bir vizyoner ve mentor.",
+        avatar: "/placeholder-user.jpg",
+        rating: 5,
+        company: "Silifke Teknoloji"
+      }
+    ],
+    contact: {
+      title: "Projenizi Konuşalım",
+      subtitle: "Hayalinizdeki projeyi gerçeğe dönüştürmek için buradayım",
+      email: "bahadir@example.com",
+      phone: "+90 555 123 45 67",
+      location: "İstanbul, Türkiye"
+    }
+  }
 
-  // Animated left-side scrolling texts
-  const leftMessages = [
-    "Hi, welcome to my profile.",
-    "I'm a ctrl C + ctrl V engineer",
-    "Enjoy your stay!",
-    "Let's build something cool.",
-    "I debug by yelling at my screen.",
-    "Professional coffee drinker.",
-    "I turn caffeine into code.",
-    "My code works... on my machine.",
-    "I write bugs, then fix them for a living.",
-    "Stack Overflow is my best friend.",
-    "I can explain it to you, but I can't understand it for you.",
-    "I use dark mode even in daylight.",
-    "I break things just to fix them.",
-    "I'm not lazy, I'm on energy-saving mode.",
-    "I'm silently correcting your grammar.",
-    "I put the 'pro' in procrastinate.",
-    
-  ];
-  const [leftMsgIndex, setLeftMsgIndex] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLeftMsgIndex((prev) => (prev + 1) % leftMessages.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [leftMessages.length]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let nextIndex;
-      do {
-        nextIndex = Math.floor(Math.random() * motivationalQuotes.length);
-      } while (nextIndex === quoteIndex);
-      setQuoteIndex(nextIndex);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [quoteIndex, motivationalQuotes.length]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animations
-      gsap.fromTo(".hero-title", { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 1.5, ease: "power3.out" })
-
+      // Initial animations
       gsap.fromTo(
-        ".hero-subtitle",
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, delay: 0.3, ease: "power3.out" },
+        ".hero-content",
+        { opacity: 0, y: 100 },
+        { opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }
       )
 
-      // Parallax background
-      gsap.to(".parallax-bg", {
-        yPercent: -50,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".parallax-bg",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      })
-
-      // About section animations
       gsap.fromTo(
-        ".about-text",
-        { x: -100, opacity: 0 },
+        ".floating-message",
+        { opacity: 0, x: -100 },
+        { opacity: 1, x: 0, duration: 1, stagger: 0.2, ease: "power2.out" }
+      )
+
+      // Scroll animations
+      gsap.fromTo(
+        ".stats-item",
+        { opacity: 0, y: 50 },
         {
-          x: 0,
           opacity: 1,
-          duration: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power2.out",
           scrollTrigger: {
-            trigger: ".about-section",
+            trigger: ".stats-section",
             start: "top 80%",
             end: "bottom 20%",
-            toggleActions: "play none none reverse",
-          },
-        },
+            toggleActions: "play none none reverse"
+          }
+        }
       )
 
-      // Skills sticky animation
-      gsap.to(".skills-progress", {
-        width: "100%",
-        duration: 2,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".skills-section",
-          start: "top 60%",
-          end: "bottom 40%",
-          toggleActions: "play none none reverse",
-        },
-      })
-
-      // Projects scroll animation
       gsap.fromTo(
-        ".project-card",
-        { y: 100, opacity: 0, scale: 0.8 },
+        ".skill-card",
+        { opacity: 0, scale: 0.8 },
         {
-          y: 0,
           opacity: 1,
           scale: 1,
-          duration: 0.8,
-          stagger: 0.2,
+          duration: 0.6,
+          stagger: 0.1,
           ease: "back.out(1.7)",
           scrollTrigger: {
-            trigger: ".projects-section",
-            start: "top 70%",
-            end: "bottom 30%",
-            toggleActions: "play none none reverse",
-          },
-        },
+            trigger: ".skills-section",
+            start: "top 80%",
+            end: "bottom 20%",
+            toggleActions: "play none none reverse"
+          }
+        }
       )
 
-      // Floating elements
-      gsap.to(".floating-element", {
-        y: -20,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut",
-        stagger: 0.5,
-      })
+      gsap.fromTo(
+        ".project-card",
+        { opacity: 0, y: 100 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".projects-section",
+            start: "top 80%",
+            end: "bottom 20%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      )
 
-      // White dots animation
-      gsap.to(".white-dot", {
-        y: -30,
-        x: 15,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut",
-        stagger: 0.3,
-      })
+      gsap.fromTo(
+        ".testimonial-card",
+        { opacity: 0, x: 100 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          stagger: 0.3,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".testimonials-section",
+            start: "top 80%",
+            end: "bottom 20%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      )
     }, containerRef)
 
     return () => ctx.revert()
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY.current && window.scrollY > 80) {
-        setShowHeader(false);
-      } else {
-        setShowHeader(true);
-      }
-      lastScrollY.current = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    // Quote rotation
+    const quoteInterval = setInterval(() => {
+      setCurrentQuote((prev) => (prev + 1) % portfolioData.hero.motivationalQuotes.length)
+    }, 5000)
 
-  // Show header on mouse enter at the top
-  useEffect(() => {
+    // Message rotation
+    const messageInterval = setInterval(() => {
+      setCurrentMessage((prev) => (prev + 1) % portfolioData.hero.leftMessages.length)
+    }, 3000)
+
+    // Mouse tracking
     const handleMouseMove = (e: MouseEvent) => {
-      if (e.clientY < 80) setShowHeader(true);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
 
-  // Smooth trailing animation for the abstract blob
-  useEffect(() => {
-    if (!showHeroBlob) return;
-    const lerp = (a: number, b: number, n: number) => a + (b - a) * n;
-    const animate = () => {
-      setTrailPos(prev => {
-        const x = lerp(prev.x, cursorPos.x, 0.13);
-        const y = lerp(prev.y, cursorPos.y, 0.13);
-        return { x, y };
-      });
-      animationRef.current = requestAnimationFrame(animate);
-    };
-    animationRef.current = requestAnimationFrame(animate);
+    window.addEventListener("mousemove", handleMouseMove)
+
     return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [cursorPos, showHeroBlob]);
+      clearInterval(quoteInterval)
+      clearInterval(messageInterval)
+      window.removeEventListener("mousemove", handleMouseMove)
+    }
+  }, [portfolioData.hero.motivationalQuotes.length, portfolioData.hero.leftMessages.length])
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const hero = heroRef.current;
-      if (!hero) return;
-      const rect = hero.getBoundingClientRect();
-      setSplashPos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    };
-    const hero = heroRef.current;
-    if (hero) hero.addEventListener('mousemove', handleMouseMove);
-    if (hero) hero.addEventListener('mouseleave', () => setSplashPos(null));
-    return () => {
-      if (hero) hero.removeEventListener('mousemove', handleMouseMove);
-      if (hero) hero.removeEventListener('mouseleave', () => setSplashPos(null));
-    };
-  }, []);
+    // Loading simulation
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
 
-  const [expTab, setExpTab] = useState(0);
-  const expTabs = [
-    {
-      title: "EXPERIENCE",
-      stats: [
-        { icon: Calendar, number: "1+", label: "YEARS EXPERIENCE" },
-        { icon: Code, number: "10+", label: "PROJECTS COMPLETED" },
-        { icon: Users, number: "7+", label: "HAPPY CLIENTS" },
-        { icon: Award, number: "1+", label: "AWARDS WON" },
-      ],
-    },
-    {
-      title: "EDUCATION",
-      stats: [
-        { icon: Calendar, number: "2025", label: "GRADUATED" },
-        { icon: Code, number: "BSc", label: "COMPUTER SCIENCE" },
-        { icon: Users, number: "3.8", label: "GPA" },
-        { icon: Award, number: "2", label: "HONORS" },
-      ],
-    },
-    {
-      title: "CERTIFICATION",
-      stats: [
-        { icon: Award, number: "5+", label: "CERTIFICATES" },
-        { icon: Code, number: "3", label: "ONLINE COURSES" },
-        { icon: Users, number: "2", label: "BOOTCAMPS" },
-        { icon: Calendar, number: "2025", label: "LAST UPDATED" },
-      ],
-    },
-  ];
+    return () => clearTimeout(timer)
+  }, [])
+
+  const scrollToSection = (sectionIndex: number) => {
+    const sections = document.querySelectorAll("section")
+    if (sections[sectionIndex]) {
+      sections[sectionIndex].scrollIntoView({ behavior: "smooth" })
+    }
+    setCurrentSection(sectionIndex)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-lg">Yükleniyor...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div ref={containerRef} className="bg-black text-white overflow-x-hidden">
-      {/* Glassmorphism Header */}
-      <header
-        ref={headerRef}
-        className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-5xl rounded-3xl bg-white/10 backdrop-blur-md shadow-lg flex items-center justify-between px-8 py-4 transition-transform duration-500 ${showHeader ? 'translate-y-0 opacity-100' : '-translate-y-32 opacity-0 pointer-events-none'}`}
-        onMouseEnter={() => setShowHeader(true)}
-      >
-        <div className="flex items-center gap-3">
-          <img src="/profile.png" alt="Logo" className="w-10 h-10 rounded-2xl object-cover" />
-          <span className="font-black text-2xl tracking-tight text-white/90">My Profile</span>
-        </div>
-        <nav className="flex gap-6">
-          <a href="#about" className="text-white/80 font-semibold hover:text-white transition-colors px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">About</a>
-          <a href="#skills" className="text-white/80 font-semibold hover:text-white transition-colors px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">Skills</a>
-          <a href="#projects" className="text-white/80 font-semibold hover:text-white transition-colors px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">Projects</a>
-          <a href="#testimonials" className="text-white/80 font-semibold hover:text-white transition-colors px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">Testimonials</a>
-          <a href="#contact" className="text-white/80 font-semibold hover:text-white transition-colors px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">Contact</a>
-        </nav>
-      </header>
-      {/* Hero Section with Parallax */}
-      <section
-        ref={heroRef}
-        className="relative h-screen flex items-center justify-center overflow-hidden pt-32 pb-32 px-4 md:px-8 lg:px-16"
-      >
-        {/* SplashCursor effect in hero section background */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <SplashCursor />
-        </div>
-        {/* Animated colorful blobs and floating dots in hero background */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          {/* Blurred colorful blobs (reduced for performance) */}
-          <div className="absolute top-1/4 left-1/5 w-60 h-60 bg-gradient-to-br from-purple-500 via-blue-500 to-pink-400 opacity-20 rounded-full blur-xl animate-blob1" style={{ willChange: 'transform' }} />
-          <div className="absolute top-2/3 right-1/4 w-44 h-44 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-500 opacity-15 rounded-full blur-xl animate-blob2" style={{ willChange: 'transform' }} />
-          {/* Fewer floating dots */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-white rounded-full opacity-30 animate-float-dot"
-              style={{
-                width: `${Math.random() * 10 + 8}px`,
-                height: `${Math.random() * 10 + 8}px`,
-                top: `${Math.random() * 80 + 10}%`,
-                left: `${Math.random() * 80 + 10}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                willChange: 'transform',
-              }}
+    <div ref={containerRef} className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Splash Cursor */}
+      <SplashCursor />
+
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <img
+              src={portfolioData.header.logo}
+              alt="Logo"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
             />
-          ))}
-        </div>
-        {/* Animated Left-Side Scrolling Texts */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-64 flex flex-col items-start pointer-events-none select-none">
-          <motion.div
-            key={leftMsgIndex}
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -40, opacity: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-lg md:text-xl font-bold text-white/80 bg-black/30 px-5 py-3 rounded-r-2xl shadow-lg"
-            style={{ minWidth: '200px' }}
+            <span className="font-black text-lg sm:text-xl md:text-2xl tracking-tight text-white/90 truncate">
+              {portfolioData.header.title}
+            </span>
+          </div>
+          
+          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+            {portfolioData.header.menu.map((item, index) => (
+              <button
+                key={item}
+                onClick={() => scrollToSection(index + 1)}
+                className={`text-sm font-medium transition-colors hover:text-blue-400 modern-focus ${
+                  currentSection === index + 1 ? "text-blue-400" : "text-white/70"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </nav>
+
+          {/* Mobile menu button */}
+          <button 
+            className="md:hidden p-2 text-white/70 hover:text-white modern-focus"
+            aria-label="Menüyü aç"
           >
-            {leftMessages[leftMsgIndex]}
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20"></div>
+        
+        {/* Floating Messages - Hidden on mobile */}
+        <div className="absolute left-4 sm:left-8 top-1/2 transform -translate-y-1/2 space-y-4 hidden lg:block">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentMessage}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.5 }}
+              className="floating-message bg-white/10 backdrop-blur-md rounded-lg p-3 sm:p-4 max-w-xs"
+            >
+              <p className="text-xs sm:text-sm text-white/80">{portfolioData.hero.leftMessages[currentMessage]}</p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Main Content */}
+        <div className="relative z-10 text-center hero-content px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="mb-6 sm:mb-8"
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 text-optimized">
+              <span className="shiny-text block">{portfolioData.hero.name.split(' ')[0]}</span>
+              <span className="shiny-text block">{portfolioData.hero.name.split(' ')[1]}</span>
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 mb-4 sm:mb-6 max-w-3xl mx-auto">
+              {portfolioData.hero.title}
+            </p>
+          </motion.div>
+
+          {/* Motivational Quote */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuote}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-2xl mx-auto mb-6 sm:mb-8"
+            >
+              <p className="text-sm sm:text-base md:text-lg text-white/60 italic px-4">
+                "{portfolioData.hero.motivationalQuotes[currentQuote]}"
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+          >
+            <button
+              onClick={() => scrollToSection(1)}
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 btn-modern modern-focus"
+            >
+              Hakkımda
+            </button>
+            <button
+              onClick={() => scrollToSection(4)}
+              className="w-full sm:w-auto border border-white/30 hover:border-white/50 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 btn-modern modern-focus"
+            >
+              Projelerimi Gör
+            </button>
           </motion.div>
         </div>
-        <motion.div className="parallax-bg absolute inset-0 z-0" style={{ y: backgroundY }}>
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/30 to-black"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(120,119,198,0.15),transparent_50%)]"></div>
-        </motion.div>
 
-        <motion.div className="relative z-10 text-center px-4" style={{ y: textY }}>
-          <motion.h1
-            className="hero-title text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-6"
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
-          >
-            <span className="shiny-text">Farhad</span>
-            <br />
-            <span className="shiny-text">Ahmad</span>
-          </motion.h1>
-          <p className="hero-subtitle text-xl md:text-2xl font-bold tracking-wide text-gray-300 mb-8">
-            Agentic AI & Full Stack Developer
-          </p>
-          <div className="flex gap-6 justify-center">
-            <motion.a
-              href="#projects"
-              className="px-8 py-4 bg-white text-black font-bold text-lg tracking-wide hover:bg-gray-200 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              VIEW WORK
-            </motion.a>
-            <Link href="/contact">
-              <motion.div
-                className="px-8 py-4 border-2 border-white text-white font-bold text-lg tracking-wide hover:bg-white hover:text-black transition-colors cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                CONTACT
-              </motion.div>
-            </Link>
-          </div>
-        </motion.div>
-
-        {/* Floating Elements */}
-        <div className="floating-element absolute top-20 left-20 w-4 h-4 bg-purple-500 rounded-full"></div>
-        <div className="floating-element absolute top-40 right-32 w-6 h-6 bg-blue-500 rounded-full"></div>
-        <div className="floating-element absolute bottom-32 left-1/4 w-3 h-3 bg-pink-500 rounded-full"></div>
-
-        {/* Floating Motivational Quote - move to absolute bottom right */}
+        {/* Scroll Indicator */}
         <motion.div
-          key={quoteIndex}
-          initial={{ opacity: 0, x: 40, y: 20 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          exit={{ opacity: 0, x: 40, y: 20 }}
-          transition={{ duration: 0.8 }}
-          className="absolute bottom-10 right-10 z-20 max-w-md rounded-2xl px-6 py-4 shadow-lg flex items-center gap-2"
-          style={{ minWidth: '260px' }}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
-          <span className="text-3xl md:text-4xl text-white/80 font-bold italic drop-shadow-lg">"</span>
-          <span className="text-base md:text-lg text-white/90 font-medium text-left px-2">{motivationalQuotes[quoteIndex]}</span>
-          <span className="text-3xl md:text-4xl text-white/80 font-bold italic drop-shadow-lg">"</span>
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white/50 rounded-full mt-2"></div>
+          </div>
         </motion.div>
       </section>
 
       {/* About Section */}
-      <section id="about" ref={aboutRef} className="about-section pt-32 pb-32 px-4 md:px-8 lg:px-16 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="white-dot absolute top-10 left-10 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-32 right-24 w-3 h-3 bg-white rounded-full opacity-40"></div>
-          <div className="white-dot absolute bottom-24 left-1/3 w-1 h-1 bg-white rounded-full opacity-80"></div>
-          <div className="white-dot absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full opacity-50"></div>
-          <div className="white-dot absolute bottom-10 right-1/4 w-3 h-3 bg-white rounded-full opacity-30"></div>
-          <div className="white-dot absolute top-1/4 right-1/3 w-1 h-1 bg-white rounded-full opacity-70"></div>
-          <div className="white-dot absolute bottom-1/3 left-1/4 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-3/4 right-10 w-1 h-1 bg-white rounded-full opacity-90"></div>
-        </div>
-        <div className="max-w-6xl mx-auto">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-16 text-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            ABOUT ME
-          </motion.h2>
-
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="about-text">
-              <p className="text-xl md:text-2xl leading-relaxed text-gray-300 mb-8">
-                I'm a passionate creative developer who loves crafting digital experiences that push boundaries and
-                inspire users.
-              </p>
-              <p className="text-lg leading-relaxed text-gray-400 mb-8">
-                With expertise in modern web technologies, I specialize in creating immersive, interactive websites that
-                tell stories and engage audiences through motion and design.
-              </p>
-              <div className="flex gap-6 mb-8">
-                <motion.a
-                  href="#"
-                  className="text-white hover:text-purple-400 transition-colors"
-                  whileHover={{ scale: 1.2 }}
-                >
-                  <Github size={32} />
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="text-white hover:text-blue-400 transition-colors"
-                  whileHover={{ scale: 1.2 }}
-                >
-                  <Linkedin size={32} />
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="text-white hover:text-green-400 transition-colors"
-                  whileHover={{ scale: 1.2 }}
-                >
-                  <Mail size={32} />
-                </motion.a>
-              </div>
-              <a
-                href="/cv.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold shadow-md hover:from-purple-600 hover:to-blue-600 transition-colors text-lg mt-2"
-                download
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m0 0l-6-6m6 6l6-6" />
-                </svg>
-                My CV
-              </a>
-            </div>
-
+      <section className="py-16 sm:py-20 bg-gradient-to-b from-black to-gray-900">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* Photo */}
             <motion.div
-              className="relative"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+              className="relative order-2 md:order-1"
             >
-              <div className="w-[400px] h-[520px] mx-auto bg-gradient-to-br from-purple-600 to-blue-600 rounded-[2.5rem] flex items-center justify-center">
-                <div className="w-[380px] h-[500px] bg-black rounded-[2.5rem] flex items-center justify-center overflow-hidden">
-                  <img src="/profile.png" alt="John Doe" className="w-[380px] h-[500px] object-cover rounded-[2.5rem]" />
-                </div>
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 mx-auto">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-xl opacity-30"></div>
+                <img
+                  src={portfolioData.about.photo}
+                  alt="Bahadır Gemalmaz"
+                  className="relative w-full h-full object-cover rounded-full border-4 border-white/20 gpu-accelerated"
+                />
               </div>
+            </motion.div>
+
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-4 sm:space-y-6 order-1 md:order-2 text-center md:text-left"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 text-optimized">Hakkımda</h2>
+              {portfolioData.about.description.map((paragraph, index) => (
+                <p key={index} className="text-base sm:text-lg text-white/80 leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+
+              {/* Social Links */}
+              <div className="flex justify-center md:justify-start space-x-3 sm:space-x-4 pt-4">
+                {portfolioData.about.socials.github && (
+                  <a
+                    href={portfolioData.about.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 sm:p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors modern-focus"
+                    aria-label="GitHub profili"
+                  >
+                    <Github className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </a>
+                )}
+                {portfolioData.about.socials.linkedin && (
+                  <a
+                    href={portfolioData.about.socials.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 sm:p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors modern-focus"
+                    aria-label="LinkedIn profili"
+                  >
+                    <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </a>
+                )}
+                {portfolioData.about.socials.email && (
+                  <a
+                    href={`mailto:${portfolioData.about.socials.email}`}
+                    className="p-2 sm:p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors modern-focus"
+                    aria-label="E-posta gönder"
+                  >
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </a>
+                )}
+                {portfolioData.about.socials.cv && (
+                  <a
+                    href={portfolioData.about.socials.cv}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 sm:p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors modern-focus"
+                    aria-label="CV indir"
+                  >
+                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </a>
+                )}
+              </div>
+
+
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section className="pt-10 pb-10 px-4 md:px-8 lg:px-16 text-white relative overflow-hidden">
-        <div className="absolute inset-0 z-0 zebra-bg pointer-events-none"></div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-16 text-center text-white"
-            initial={{ opacity: 0, y: 50 }}
+      {/* VIP References Section */}
+      <section className="py-20 bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden vip-section relative">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-pink-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            {expTabs[expTab].title}
-          </motion.h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {expTabs[expTab].stats.map((stat, index) => (
+            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              VIP Referanslar
+            </h2>
+            <p className="text-xl md:text-2xl text-white/70 font-medium">Güvenilen markaların tercihi</p>
+          </motion.div>
+
+          {/* Scrolling References */}
+          <div className="relative mb-20">
+            <div className="flex overflow-hidden">
               <motion.div
-                key={stat.label}
-                className="text-center"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="mb-4">
-                  <stat.icon size={48} className="mx-auto text-white" />
-                </div>
-                <h3 className="text-4xl font-black text-white mb-2">{stat.number}</h3>
-                <p className="text-white font-bold tracking-wide">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-          {/* Swipe Button BELOW content */}
-          <div className="flex justify-center mt-10">
-            <button
-              className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg hover:bg-gray-200 transition-colors"
-              style={{ border: 'none' }}
-              onClick={() => setExpTab((expTab + 1) % expTabs.length)}
-              aria-label="Swipe"
-            >
-              <ArrowRight className="text-black w-8 h-8" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Section with Sticky Elements */}
-      <section id="skills" className="skills-section pt-32 pb-48 px-4 md:px-8 lg:px-16 relative overflow-hidden bg-black">
-        <div className="absolute inset-0">
-          <div className="white-dot absolute top-12 left-16 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-36 right-28 w-3 h-3 bg-white rounded-full opacity-40"></div>
-          <div className="white-dot absolute bottom-28 left-1/2 w-1 h-1 bg-white rounded-full opacity-80"></div>
-          <div className="white-dot absolute top-2/3 left-1/3 w-2 h-2 bg-white rounded-full opacity-50"></div>
-          <div className="white-dot absolute bottom-12 right-1/5 w-3 h-3 bg-white rounded-full opacity-30"></div>
-          <div className="white-dot absolute top-1/3 right-1/2 w-1 h-1 bg-white rounded-full opacity-70"></div>
-          <div className="white-dot absolute bottom-1/4 left-1/5 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-3/5 right-16 w-1 h-1 bg-white rounded-full opacity-90"></div>
-        </div>
-        <div className="max-w-6xl mx-auto">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-10 text-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            SKILLS
-          </motion.h2>
-          {/* Centered Skills Grid/TabSwitcher */}
-          <div className="flex flex-col items-center justify-center w-full mt-16">
-            <div className="w-full max-w-4xl px-4">
-              <TabSwitcher />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="pt-32 pb-32 px-4 md:px-8 lg:px-16 relative overflow-hidden" style={{ background: '#141414' }}>
-        {/* Giraffe-like black patches */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          {Array.from({ length: 12 }).map((_, i) => {
-            // Randomize position, size, and border radius
-            const top = Math.random() * 80 + 5; // 5% to 85%
-            const left = Math.random() * 80 + 5;
-            const width = Math.random() * 80 + 60; // 60px to 140px
-            const height = Math.random() * 40 + 40; // 40px to 80px
-            const borderRadius = Math.random() * 40 + 30; // 30px to 70px
-            return (
-              <div
-                key={i}
-                style={{
-                  position: 'absolute',
-                  top: `${top}%`,
-                  left: `${left}%`,
-                  width,
-                  height,
-                  background: '#000',
-                  opacity: 0.18,
-                  borderRadius: `${borderRadius}%`,
-                  transform: `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`,
+                className="flex whitespace-nowrap scrolling-references"
+                animate={{
+                  x: [0, -2000],
                 }}
-              />
-            );
-          })}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 60,
+                    ease: "linear",
+                  },
+                }}
+              >
+                {/* First set of references */}
+                <div className="flex items-center space-x-12 text-white text-xl font-medium">
+                  <a 
+                    href="https://www.simayhareketi.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.simayhareketi.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.effemimarlik.com.tr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.effemimarlik.com.tr
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.vertexyapi.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.vertexyapi.com
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.avaxsavunma.com.tr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.avaxsavunma.com.tr
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.mahallepanosu.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.mahallepanosu.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://simay.tech" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    simay.tech
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.silifketeknoloji.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.silifketeknoloji.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.bahadirgemalmaz.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.bahadirgemalmaz.com
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                </div>
+                
+                {/* Second set for seamless loop */}
+                <div className="flex items-center space-x-12 text-white text-xl font-medium ml-12">
+                  <a 
+                    href="https://www.simayhareketi.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.simayhareketi.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.effemimarlik.com.tr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.effemimarlik.com.tr
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.vertexyapi.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.vertexyapi.com
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.avaxsavunma.com.tr" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.avaxsavunma.com.tr
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.mahallepanosu.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.mahallepanosu.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://simay.tech" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    simay.tech
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.silifketeknoloji.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.silifketeknoloji.org
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                  <a 
+                    href="https://www.bahadirgemalmaz.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="reference-item hover:text-blue-400 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10 hover:border-blue-400/50 hover:bg-white/10"
+                  >
+                    www.bahadirgemalmaz.com
+                  </a>
+                  <span className="text-blue-400 text-2xl">•</span>
+                </div>
+              </motion.div>
+            </div>
+            
+            {/* Gradient overlays for smooth fade effect */}
+            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-black via-black/80 to-transparent pointer-events-none"></div>
+            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-black via-black/80 to-transparent pointer-events-none"></div>
+          </div>
+
+          {/* VIP References Content - Enhanced Design */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - References List */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Güvenilen Markaların Tercihi
+              </h3>
+              <p className="text-white/70 text-lg leading-relaxed mb-8">
+                Müşterilerimle kurduğum güven ilişkisi ve kaliteli iş çıktıları sayesinde, 
+                farklı sektörlerden prestijli firmaların tercih ettiği bir geliştirici oldum.
+              </p>
+              
+              {/* References Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-all duration-300">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                    <span className="text-white/90 font-medium">Effe Mimarlık</span>
+                  </div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-all duration-300">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                    <span className="text-white/90 font-medium">Vertex Yapı</span>
+                  </div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-all duration-300">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                    <span className="text-white/90 font-medium">Avax Savunma</span>
+                  </div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-all duration-300">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-pink-400 rounded-full"></div>
+                    <span className="text-white/90 font-medium">Simay Hareketi</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Column - Success Metrics */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="space-y-6"
+            >
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Başarı Hikayeleri
+              </h3>
+              <p className="text-white/70 text-lg leading-relaxed mb-8">
+                Her proje, sadece teknik mükemmellik değil, aynı zamanda iş hedeflerine ulaşma 
+                ve müşteri memnuniyeti sağlama konusunda da başarı hikayesi.
+              </p>
+              
+              {/* Success Stories */}
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl p-6 border border-blue-400/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-400 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">🚀</span>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Hızlı MVP Geliştirme</h4>
+                      <p className="text-white/70 text-sm">Projeleri ortalama 2-3 haftada tamamlayarak, müşterilerin pazara hızlı giriş yapmasını sağlıyorum.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-sm rounded-xl p-6 border border-green-400/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-400 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">💎</span>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Premium Kalite</h4>
+                      <p className="text-white/70 text-sm">Her projede pixel-perfect tasarım ve optimize edilmiş performans garantisi veriyorum.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 backdrop-blur-sm rounded-xl p-6 border border-yellow-400/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">🤝</span>
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold mb-2">Sürekli İletişim</h4>
+                      <p className="text-white/70 text-sm">Proje süresince her adımda müşteriyi bilgilendirerek, şeffaf ve güvenilir bir süreç sunuyorum.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bottom Section - Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-16 text-center"
+          >
+            <div className="bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-blue-400/20 relative overflow-hidden">
+              <div className="relative z-10">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
+                  Siz de VIP Referanslarımızdan Olun
+                </h3>
+                <p className="text-white/80 text-lg leading-relaxed max-w-3xl mx-auto mb-8">
+                  Profesyonel yaklaşımım ve kaliteli iş çıktılarımla, 
+                  projenizi hayata geçirmek için buradayım. 
+                  Güvenilir, hızlı ve etkili çözümlerle markanızı dijital dünyada öne çıkaralım.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border border-blue-400/50">
+                    Proje Başlat
+                  </button>
+                  <button className="border border-white/30 hover:border-white/50 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+                    Portfolyo İncele
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
-        <div className="max-w-6xl mx-auto">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-16 text-center"
-            initial={{ opacity: 0, y: 50 }}
+      </section>
+
+      {/* Skills Section */}
+      <section className="py-20 bg-gradient-to-br from-black via-gray-900 to-black skills-section relative">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-green-500/5"></div>
+        <div className="absolute top-32 right-32 w-40 h-40 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-32 left-32 w-36 h-36 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            SERVICES
-          </motion.h2>
+            {/* VIP Badge */}
+            <div className="inline-flex items-center justify-center mb-6">
+              <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-6 py-2 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg border border-yellow-300/50">
+                <svg className="w-4 h-4 mr-2 inline" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                Premium Yetenekler
+              </div>
+            </div>
+            
+            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+              Yetenekler
+            </h2>
+            <p className="text-xl md:text-2xl text-white/70 font-medium">Teknik ve kişisel becerilerim</p>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "WEB DEVELOPMENT",
-                description: "Custom websites and web applications built with modern technologies",
-              },
-              {
-                title: "UI/UX DESIGN",
-                description: "Beautiful and intuitive user interfaces that convert visitors to customers",
-              },
-              {
-                title: "CUSTOM CHAT BOT",
-                description: "Conversational AI bots tailored for your business needs.",
-              },
-              {
-                title: "E-COMMERCE",
-                description: "Complete online stores with payment integration and inventory management",
-              },
-              {
-                title: "BRANDING",
-                description: "Logo design, brand identity, and marketing materials that stand out",
-              },
-              {
-                title: "CONSULTING",
-                description: "Technical consulting and code reviews to optimize your existing projects",
-              },
-            ].map((service, index) => (
+          {/* Technical Skills - VIP Premium Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {Object.entries(portfolioData.skills.technical).map(([category, skills], index) => (
               <motion.div
-                key={service.title}
-                className="bg-black p-8 rounded-lg border border-gray-800 hover:border-purple-500 transition-colors cursor-pointer hover:scale-[1.04] hover:-translate-y-2 hover:shadow-xl duration-300"
+                key={category}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
+                className="skill-card group relative"
               >
-                <h3 className="text-2xl font-black tracking-wide mb-4 text-purple-400">{service.title}</h3>
-                <p className="text-gray-400 mb-6 leading-relaxed">{service.description}</p>
+                <div className="relative bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 hover:border-green-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20 h-full overflow-hidden">
+                  {/* VIP Background Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500"></div>
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 30c0-16.569 13.431-30 30-30v60c-16.569 0-30-13.431-30-30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                    }}></div>
+                  </div>
+                  
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-blue-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* VIP Crown Icon */}
+                  <div className="absolute top-4 right-4 z-20">
+                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* Category Icon and Image */}
+                  <div className="relative z-10 text-center">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-500/20 to-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 relative">
+                      {/* VIP Border Glow */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/50 via-orange-500/50 to-red-500/50 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      {category === "Frontend Geliştirme" && (
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center relative z-10">
+                          <Code className="w-6 h-6 text-white" />
+                        </div>
+                      )}
+                      {category === "Tasarım & UX" && (
+                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center relative z-10">
+                          <Palette className="w-6 h-6 text-white" />
+                        </div>
+                      )}
+                      {category === "Altyapı & Otomasyon" && (
+                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center relative z-10">
+                          <Zap className="w-6 h-6 text-white" />
+                        </div>
+                      )}
+                      {category === "Animasyon & Etkileşim" && (
+                        <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center relative z-10">
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <h3 className="text-xl font-bold mb-6 text-white group-hover:text-green-400 transition-colors duration-300">
+                      {category}
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      {skills.map((skill) => (
+                        <div key={skill} className="bg-white/5 backdrop-blur-sm rounded-lg px-4 py-2 text-white/90 text-sm font-medium border border-white/10 hover:border-green-400/30 transition-all duration-300 group-hover:bg-white/10">
+                          {skill}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
+
+          {/* Soft Skills - Modern Cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Kişisel Beceriler
+              </h3>
+              <p className="text-white/60 text-lg max-w-3xl mx-auto">
+                Geleneksel becerileri modern startup ekosisteminde değer yaratan yaklaşımlara dönüştürdüm. 
+                Her bir yetkinlik, günümüzün hızlı değişen teknoloji dünyasında başarı için kritik öneme sahip.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {portfolioData.skills.softSkills.map((skill, index) => (
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  className="group relative"
+                >
+                  <div className="relative bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20 hover:border-blue-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/30 text-center h-full overflow-hidden">
+                    {/* Animated Background Pattern */}
+                    <div className="absolute inset-0 opacity-5">
+                      <div className="absolute inset-0" style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='2'/%3E%3C/g%3E%3C/svg%3E")`
+                      }}></div>
+                    </div>
+                    
+                    {/* Enhanced Background Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-700 blur-xl"></div>
+                    
+                    {/* Skill Icon Container */}
+                    <div className="relative z-10">
+                      <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500/30 via-purple-500/20 to-pink-500/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg">
+                        <span className="text-3xl filter drop-shadow-lg">{skill.icon}</span>
+                      </div>
+                      
+                      {/* Skill Name */}
+                      <div className="text-white/95 font-bold text-base mb-3 group-hover:text-blue-200 transition-colors duration-300">
+                        {skill.name}
+                      </div>
+                      
+                      {/* Skill Description */}
+                      <div className="text-white/70 text-sm leading-relaxed group-hover:text-blue-100 transition-colors duration-300 px-2">
+                        {skill.description}
+                      </div>
+                    </div>
+                    
+                    {/* Enhanced Hover Effects */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-b-xl transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"></div>
+                    
+                    {/* Corner Accent */}
+                    <div className="absolute top-3 right-3 w-3 h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 scale-0 group-hover:scale-100"></div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Tools - Modern Cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h3 className="text-3xl md:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Kullandığım Araçlar
+            </h3>
+            
+            {/* Tools Categories */}
+            <div className="space-y-12">
+              {Object.entries(portfolioData.skills.tools).map(([category, tools], categoryIndex) => (
+                <motion.div
+                  key={category}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
+                  className="space-y-6"
+                >
+                  {/* Category Header */}
+                  <div className="text-center">
+                    <h4 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {category}
+                    </h4>
+                  </div>
+                  
+                  {/* Tools Grid */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {tools.map((tool, toolIndex) => (
+                      <motion.div
+                        key={tool}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: categoryIndex * 0.2 + toolIndex * 0.05 }}
+                        className="group relative"
+                      >
+                        <div className="relative bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-xl p-4 border border-white/20 hover:border-blue-400/50 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 text-center">
+                          {/* Background glow effect */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          
+                          {/* Tool Icon */}
+                          <div className="relative z-10">
+                            <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                              <Zap className="w-4 h-4 text-blue-400" />
+                            </div>
+                            <div className="text-white/90 text-xs font-medium group-hover:text-blue-300 transition-colors duration-300 leading-tight">
+                              {tool}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+          
+          {/* Premium Skills Description */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mt-20"
+          >
+            <div className="bg-gradient-to-r from-yellow-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-yellow-400/20 relative overflow-hidden">
+              {/* VIP Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 30c0-16.569 13.431-30 30-30v60c-16.569 0-30-13.431-30-30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                }}></div>
+              </div>
+              
+              {/* VIP Crown Icon */}
+              <div className="absolute top-6 right-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                  </svg>
+                </div>
+              </div>
+              
+              <div className="relative z-10 text-center">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
+                  Premium Yetenek Seti
+                </h3>
+                <p className="text-white/80 text-lg leading-relaxed max-w-4xl mx-auto">
+                  Modern web teknolojileri, tasarım araçları ve otomasyon sistemleri konusunda uzmanlaşmış bir geliştirici olarak, 
+                  her projeye startup vibe hissi veren dinamik ve akıcı etkileşimler katıyorum. 
+                  Güvenli, ölçeklenebilir altyapılar ve iş süreçlerini hızlandıran otomasyonlar ile 
+                  müşterilerimin dijital dönüşümüne katkı sağlıyorum.
+                </p>
+                
+                {/* Skill Highlights */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center">
+                      <Code className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <p className="text-white/70 text-sm">Modern Arayüzler</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
+                      <Palette className="w-6 h-6 text-purple-400" />
+                    </div>
+                    <p className="text-white/70 text-sm">UX Odaklı Tasarım</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl flex items-center justify-center">
+                      <Zap className="w-6 h-6 text-green-400" />
+                    </div>
+                    <p className="text-white/70 text-sm">Otomasyon Sistemleri</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                      </svg>
+                    </div>
+                    <p className="text-white/70 text-sm">Dinamik Etkileşimler</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Skills Showcase Section */}
+      <section className="py-20 bg-gradient-to-b from-black to-gray-900 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-pink-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Yetenek Seti
+            </h2>
+            <p className="text-xl md:text-2xl text-white/70 font-medium">Startup ekosisteminde değer yaratan yaklaşımlar</p>
+          </motion.div>
+
+          {/* Skills Grid with Enhanced Design */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {portfolioData.skills.softSkills.map((skill, index) => (
+              <motion.div
+                key={skill.name}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="group relative"
+              >
+                <div className="relative bg-gradient-to-br from-white/15 via-white/8 to-white/15 backdrop-blur-xl rounded-2xl p-8 border border-white/25 hover:border-blue-400/60 transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/40 text-center h-full overflow-hidden">
+                  {/* Animated Background Pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 30c0-16.569 13.431-30 30-30v60c-16.569 0-30-13.431-30-30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                    }}></div>
+                  </div>
+                  
+                  {/* Enhanced Background Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-pink-500/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-1000 blur-xl"></div>
+                  
+                  {/* Skill Icon Container */}
+                  <div className="relative z-10">
+                    <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-blue-500/40 via-purple-500/30 to-pink-500/40 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-2xl">
+                      <span className="text-4xl filter drop-shadow-lg">{skill.icon}</span>
+                    </div>
+                    
+                    {/* Skill Name */}
+                    <div className="text-white/95 font-bold text-lg mb-4 group-hover:text-blue-200 transition-colors duration-500">
+                      {skill.name}
+                    </div>
+                    
+                    {/* Skill Description */}
+                    <div className="text-white/75 text-base leading-relaxed group-hover:text-blue-100 transition-colors duration-500 px-2">
+                      {skill.description}
+                    </div>
+                  </div>
+                  
+                  {/* Enhanced Hover Effects */}
+                  <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-b-2xl transform scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 origin-left"></div>
+                  
+                  {/* Corner Accent */}
+                  <div className="absolute top-4 right-4 w-4 h-4 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 scale-0 group-hover:scale-100"></div>
+                  
+                  {/* Floating Particles */}
+                  <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1000 animate-pulse"></div>
+                  <div className="absolute bottom-1/4 right-1/4 w-1.5 h-1.5 bg-purple-400/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1000 animate-pulse delay-300"></div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Skills Summary */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-center"
+          >
+            <div className="bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-blue-400/20 relative overflow-hidden">
+              <div className="relative z-10">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
+                  Startup Mentality ile Geliştirilen Yetenekler
+                </h3>
+                <p className="text-white/80 text-lg leading-relaxed max-w-4xl mx-auto mb-8">
+                  Her bir beceri, modern iş dünyasında ve startup ekosisteminde başarı için kritik öneme sahip. 
+                  Bu yetkinlikler sadece kişisel gelişimi değil, aynı zamanda takım performansını ve proje başarısını da artırıyor.
+                </p>
+                
+                {/* Skill Categories */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl">🎯</span>
+                    </div>
+                    <p className="text-white/70 text-sm font-medium">Stratejik Düşünme</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl">🚀</span>
+                    </div>
+                    <p className="text-white/70 text-sm font-medium">Hızlı Uygulama</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl">🤝</span>
+                    </div>
+                    <p className="text-white/70 text-sm font-medium">İşbirliği</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl">💡</span>
+                    </div>
+                    <p className="text-white/70 text-sm font-medium">İnovasyon</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section id="projects" ref={projectsRef} className="projects-section pt-32 pb-32 px-4 md:px-8 lg:px-16 relative overflow-hidden bg-black">
-        <div className="absolute inset-0"></div>
-        <div className="absolute inset-0">
-          <div className="white-dot absolute top-20 left-20 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-40 right-32 w-3 h-3 bg-white rounded-full opacity-40"></div>
-          <div className="white-dot absolute bottom-32 left-1/4 w-1 h-1 bg-white rounded-full opacity-80"></div>
-          <div className="white-dot absolute top-60 left-1/2 w-2 h-2 bg-white rounded-full opacity-50"></div>
-          <div className="white-dot absolute bottom-40 right-1/4 w-3 h-3 bg-white rounded-full opacity-30"></div>
-          <div className="white-dot absolute top-32 right-1/3 w-1 h-1 bg-white rounded-full opacity-70"></div>
-          <div className="white-dot absolute bottom-60 left-1/3 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-80 right-20 w-1 h-1 bg-white rounded-full opacity-90"></div>
-        </div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-16 text-center"
-            initial={{ opacity: 0, y: 50 }}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black projects-section relative">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-pink-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            PROJECTS
-          </motion.h2>
+            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Projeler
+            </h2>
+            <p className="text-xl md:text-2xl text-white/70 font-medium">Tamamladığım öne çıkan projeler</p>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "E-COMMERCE PLATFORM",
-                tech: "Next.js, Stripe, PostgreSQL",
-                image: "/project.png",
-              },
-              {
-                title: "PORTFOLIO WEBSITE",
-                tech: "React, GSAP, Framer Motion",
-                image: "/project.png",
-              },
-              { title: "MOBILE APP", tech: "React Native, Firebase", image: "/project.png" },
-              {
-                title: "WEB3 DASHBOARD",
-                tech: "React, Web3.js, Ethereum",
-                image: "/project.png",
-              },
-              { title: "AI CHATBOT", tech: "Python, OpenAI, FastAPI", image: "/project.png" },
-              {
-                title: "GAME PLATFORM",
-                tech: "Three.js, WebGL, Socket.io",
-                image: "/project.png",
-              },
-            ].map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+            {portfolioData.projects.featured.map((project, index) => (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                className="project-card group"
+              >
+                <div className="relative bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/20 hover:border-blue-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 h-full flex flex-col touch-manipulation active:scale-95 md:active:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50 cursor-pointer select-none will-change-transform transform-gpu gpu-accelerated user-select-none -webkit-user-select-none -moz-user-select-none -ms-user-select-none -webkit-tap-highlight-color-transparent -webkit-touch-callout-none -webkit-user-drag-none -webkit-user-modify-read-only -webkit-user-modify-read-write-plaintext-only -webkit-user-modify-read-write -webkit-user-modify-read-write-plaintext-only -webkit-user-modify-read-write-plaintext-only">
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Project Image */}
+                  <div className="relative overflow-hidden h-40 md:h-52">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20"></div>
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-contain p-4 md:p-6 group-hover:scale-110 transition-transform duration-500"
+                    />
+                    
+                    {/* Status Badge */}
+                    <div className="absolute top-2 md:top-4 right-2 md:right-4">
+                      <span className="bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold px-2 md:px-3 py-1 rounded-full border border-green-400/50">
+                        {project.status}
+                      </span>
+                    </div>
+                    
+                    {/* Category Badge */}
+                    <div className="absolute top-2 md:top-4 left-2 md:left-4">
+                      <span className="bg-blue-500/90 backdrop-blur-sm text-white text-xs font-bold px-2 md:px-3 py-1 rounded-full border border-blue-400/50">
+                        {project.category}
+                      </span>
+                    </div>
+                    
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none md:pointer-events-auto">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border border-blue-400/50 pointer-events-auto"
+                      >
+                        Projeyi Gör
+                      </a>
+                    </div>
+                  </div>
+                  
+                  {/* Project Content */}
+                  <div className="relative z-10 p-4 md:p-6 flex flex-col flex-1">
+                    <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-white group-hover:text-blue-400 transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    <p className="text-white/70 mb-3 md:mb-4 text-xs md:text-sm leading-relaxed flex-1">
+                      {project.description}
+                    </p>
+                    
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-1.5 md:gap-2 mb-3 md:mb-4">
+                      {project.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="bg-white/10 backdrop-blur-sm text-white/80 text-xs px-2 md:px-3 py-1 rounded-lg border border-white/20 hover:border-blue-400/50 transition-all duration-300"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    {/* Project Link */}
+                    <div className="mt-auto">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 text-xs md:text-sm font-medium flex items-center group/link"
+                      >
+                        Siteyi Ziyaret Et
+                        <ExternalLink className="w-3 h-3 md:w-4 md:h-4 ml-1 group-hover/link:translate-x-1 transition-transform duration-300" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="pt-32 pb-32 px-4 md:px-8 lg:px-16 relative overflow-hidden">
-        <div className="absolute inset-0 z-0 zebra-bg pointer-events-none"></div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-16 text-center"
-            initial={{ opacity: 0, y: 50 }}
+      <section className="py-20 bg-gradient-to-br from-black via-gray-900 to-black testimonials-section relative">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-blue-500/5 to-purple-500/5"></div>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-purple-500/20 to-green-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            TESTIMONIALS
-          </motion.h2>
+            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Müşteri Yorumları
+            </h2>
+            <p className="text-xl md:text-2xl text-white/70 font-medium">Müşterilerimin deneyimleri ve başarı hikayeleri</p>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sarah Johnson",
-                role: "CEO, TechStart",
-                text: "John delivered an exceptional website that exceeded our expectations. His attention to detail and creative vision is unmatched.",
-                rating: 5,
-              },
-              {
-                name: "Mike Chen",
-                role: "Founder, DesignCo",
-                text: "Working with John was a game-changer for our business. The mobile app he built increased our user engagement by 300%.",
-                rating: 5,
-              },
-              {
-                name: "Emily Davis",
-                role: "Marketing Director",
-                text: "Professional, creative, and reliable. John transformed our brand identity and created a stunning e-commerce platform.",
-                rating: 5,
-              },
-            ].map((testimonial, index) => (
+            {portfolioData.testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.name}
-                className="bg-black p-8 rounded-lg border border-gray-800 hover:border-purple-500 transition-colors hover-lift cursor-pointer"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8, scale: 1.03 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                className="testimonial-card group"
               >
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={20} className="text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-6 leading-relaxed">"{testimonial.text}"</p>
-                <div>
-                  <h4 className="font-bold text-white">{testimonial.name}</h4>
-                  <p className="text-gray-400 text-sm">{testimonial.role}</p>
+                <div className="relative bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 hover:border-green-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20 h-full">
+                  {/* Background glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-blue-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Quote Icon */}
+                  <div className="relative z-10 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                      <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* Rating Stars */}
+                  <div className="relative z-10 flex items-center mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10 mb-6">
+                    <p className="text-white/80 italic text-lg leading-relaxed">
+                      "{testimonial.content}"
+                    </p>
+                  </div>
+                  
+                  {/* Author Info */}
+                  <div className="relative z-10 flex items-center">
+                    <div className="w-12 h-12 rounded-full overflow-hidden mr-4 border-2 border-white/20 group-hover:border-green-400/50 transition-colors duration-300">
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-white group-hover:text-green-400 transition-colors duration-300">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-white/60 text-sm">{testimonial.role}</p>
+                      <p className="text-green-400/80 text-xs font-medium">{testimonial.company}</p>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Contact Section with Purple Background and White Dots */}
-      <section id="contact" className="pt-32 pb-48 px-4 md:px-8 lg:px-16 bg-black relative overflow-hidden">
-        {/* Animated White Dots */}
-        <div className="absolute inset-0">
-          <div className="white-dot absolute top-20 left-20 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-40 right-32 w-3 h-3 bg-white rounded-full opacity-40"></div>
-          <div className="white-dot absolute bottom-32 left-1/4 w-1 h-1 bg-white rounded-full opacity-80"></div>
-          <div className="white-dot absolute top-60 left-1/2 w-2 h-2 bg-white rounded-full opacity-50"></div>
-          <div className="white-dot absolute bottom-40 right-1/4 w-3 h-3 bg-white rounded-full opacity-30"></div>
-          <div className="white-dot absolute top-32 right-1/3 w-1 h-1 bg-white rounded-full opacity-70"></div>
-          <div className="white-dot absolute bottom-60 left-1/3 w-2 h-2 bg-white rounded-full opacity-60"></div>
-          <div className="white-dot absolute top-80 right-20 w-1 h-1 bg-white rounded-full opacity-90"></div>
-        </div>
-
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-8"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            LET'S WORK
-          </motion.h2>
-          <motion.h2
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            TOGETHER
-          </motion.h2>
-
-          <motion.p
-            className="text-xl md:text-2xl text-purple-100 mb-12 max-w-2xl mx-auto"
+          
+          {/* Call to Action */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="text-center mt-16"
           >
-            Ready to bring your ideas to life? Let's create something amazing together.
-          </motion.p>
-
-          <Link href="/contact">
-            <motion.div
-              className="inline-block jelly-green-btn cursor-pointer"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              GET IN TOUCH
-            </motion.div>
-          </Link>
+            <div className="bg-gradient-to-r from-green-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                Siz de Memnun Müşterilerimizden Olun
+              </h3>
+              <p className="text-white/70 mb-6 text-lg">
+                Projenizi hayata geçirmek için hemen iletişime geçin
+              </p>
+              <button
+                onClick={() => scrollToSection(5)}
+                className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border border-green-400/50"
+              >
+                İletişime Geç
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
+
+      {/* Contact Section */}
+      <section className="py-20 bg-gradient-to-b from-black to-blue-900">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">{portfolioData.contact.title}</h2>
+            <p className="text-xl text-white/70">{portfolioData.contact.subtitle}</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center space-x-4">
+                <Mail className="w-6 h-6 text-blue-400" />
+                <div>
+                  <h3 className="font-semibold">E-posta</h3>
+                  <p className="text-white/70">{portfolioData.contact.email}</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Users className="w-6 h-6 text-blue-400" />
+                <div>
+                  <h3 className="font-semibold">Telefon</h3>
+                  <p className="text-white/70">{portfolioData.contact.phone}</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Globe className="w-6 h-6 text-blue-400" />
+                <div>
+                  <h3 className="font-semibold">Konum</h3>
+                  <p className="text-white/70">{portfolioData.contact.location}</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-8 border border-white/10"
+            >
+              <form className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">İsim</label>
+                  <input
+                    type="text"
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-blue-400"
+                    placeholder="Adınız"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">E-posta</label>
+                  <input
+                    type="email"
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-blue-400"
+                    placeholder="e-posta@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Mesaj</label>
+                  <textarea
+                    rows={4}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-blue-400 resize-none"
+                    placeholder="Projeniz hakkında bilgi verin..."
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Mesaj Gönder
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 bg-black border-t border-white/10">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-white/60">
+            © 2025 {portfolioData.hero.name}. Tüm hakları saklıdır.
+          </p>
+        </div>
+      </footer>
     </div>
   )
-}
-
-// TabSwitcher component for beautiful tabs and animated indicator
-function TabSwitcher() {
-  const [skillTab, setSkillTab] = useState(0);
-  const tabNames = ["Technical Skills", "Soft Skills", "Tools"];
-  const tabRefs = [useRef<HTMLButtonElement>(null), useRef<HTMLButtonElement>(null), useRef<HTMLButtonElement>(null)];
-  const indicatorRef = useRef<HTMLDivElement>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-
-  useLayoutEffect(() => {
-    const node = tabRefs[skillTab].current;
-    if (node) {
-      setIndicatorStyle({ left: node.offsetLeft, width: node.offsetWidth });
-    }
-  }, [skillTab]);
-
-  return (
-    <div className="relative flex flex-col items-center mb-14 w-full">
-      <div className="flex bg-white/10 backdrop-blur-md border border-white/20 rounded-full shadow-lg px-2 py-2 gap-2 relative min-w-[320px]">
-        {/* Animated indicator */}
-        <div
-          ref={indicatorRef}
-          className="absolute top-1 left-0 h-[calc(100%-0.5rem)] rounded-full bg-gradient-to-r from-purple-500/80 to-blue-500/80 shadow-lg transition-all duration-500 ease-[cubic-bezier(.4,2,.6,1)] z-0"
-          style={{ left: indicatorStyle.left, width: indicatorStyle.width, pointerEvents: 'none' }}
-        />
-        {tabNames.map((tab, idx) => (
-          <button
-            key={tab}
-            ref={tabRefs[idx]}
-            onClick={() => setSkillTab(idx)}
-            className={`relative z-10 px-7 py-2 font-bold font-mono rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400
-              ${skillTab === idx ? 'text-white scale-105 bg-gradient-to-r from-purple-600/80 to-blue-600/80 shadow' : 'text-gray-300 hover:text-white hover:scale-105'}`}
-            aria-selected={skillTab === idx}
-            tabIndex={0}
-            type="button"
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-      {/* Tab Content with smooth fade/slide */}
-      <div className="w-full mt-12">
-        <AnimatePresence mode="wait">
-          <TabContent key={skillTab} skillTab={skillTab} />
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
-// TabContent component for animated tab panels
-function TabContent({ skillTab }: { skillTab: number }) {
-  return (
-    <motion.div
-      key={skillTab}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -30 }}
-      transition={{ duration: 0.5, ease: [0.4, 2, 0.6, 1] }}
-    >
-      {skillTab === 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 w-full">
-          {[
-            { icon: Code, title: "FRONTEND", skills: ["React", "Next.js", "TypeScript", "Tailwind"] },
-            { icon: Palette, title: "DESIGN", skills: ["Figma", "shadcn", "UI/UX", "ReactBits"] },
-            { icon: Zap, title: "ANIMATION", skills: ["GSAP", "Framer Motion", "CSS", "WebGL"] },
-            { icon: Globe, title: "BACKEND", skills: ["Node.js", "Python", "PostgreSQL", "FastApi"] },
-          ].map((category, index) => (
-            <motion.div
-              key={category.title}
-              className="text-center bg-black/80 rounded-2xl p-8 shadow-md hover:shadow-lg transition-all duration-300 w-full"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <div className="mb-6">
-                <category.icon size={52} className="mx-auto text-purple-400" />
-              </div>
-              <h3 className="text-2xl font-black tracking-wide mb-4 text-white">{category.title}</h3>
-              <div className="space-y-3">
-                {category.skills.map((skill) => (
-                  <div key={skill} className="relative">
-                    <div className="text-base text-gray-200 mb-1 font-semibold tracking-wide">{skill}</div>
-                    <div className="w-full bg-gray-700 h-1.5 rounded-full">
-                      <div
-                        className="skills-progress h-1.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-                        style={{ width: "100%" }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-      {skillTab === 1 && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {[
-            'Communication',
-            'Problem Solving',
-            'Teamwork',
-            'Adaptability',
-            'Creativity',
-            'Critical Thinking',
-            'Time Management',
-            'Leadership',
-          ].map((skill, index) => (
-            <motion.div
-              key={skill}
-              className="bg-black/80 border border-blue-600 rounded-2xl p-7 text-center text-white font-bold text-lg shadow-md transition-all duration-300 cursor-pointer hover:scale-[1.04] hover:-translate-y-2 hover:border-blue-400 hover:shadow-xl"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              viewport={{ once: true }}
-            >
-              {skill}
-            </motion.div>
-          ))}
-        </div>
-      )}
-      {skillTab === 2 && (
-        <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
-          {[
-            'v0.dev',
-            'Git',
-            'GitHub',
-            'VS Code',
-            'Figma',
-            'Postman',
-            'Notion',
-            'Vercel',
-            'Netlify',
-            'Supabase',
-            'Firebase',
-            'Trello',
-            'Slack',
-            'Jira',
-            'Discord',
-            'Photoshop',
-            'Illustrator',
-            'Canva',
-          ].map((tool, index) => (
-            <motion.div
-              key={tool}
-              className="bg-black/80 border border-purple-600 rounded-2xl p-5 text-center text-white font-semibold text-base shadow-md transition-all duration-300 cursor-pointer hover:scale-[1.04] hover:-translate-y-2 hover:border-purple-400 hover:shadow-xl"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.03 }}
-              viewport={{ once: true }}
-            >
-              {tool}
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-function ProjectCard({ project, index }: { project: { title: string; tech: string; image: string }, index: number }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    // Max tilt angle
-    const maxTilt = 15;
-    const tiltX = ((y - centerY) / centerY) * maxTilt;
-    const tiltY = ((x - centerX) / centerX) * maxTilt;
-    setTilt({ x: tiltX, y: tiltY });
-  }
-
-  function handleMouseLeave() {
-    setTilt({ x: 0, y: 0 });
-  }
-
-  return (
-    <motion.div
-      ref={cardRef}
-      className="group relative flex flex-col items-center bg-gradient-to-br from-white/5 to-black/60 border border-gray-800 rounded-2xl shadow-xl px-8 pt-8 pb-6 transition-all duration-300 hover:shadow-[0_8px_40px_0_rgba(162,89,247,0.18)] hover:-translate-y-2 hover:scale-[1.04] cursor-pointer min-h-[420px]"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.08 }}
-      viewport={{ once: true }}
-      style={{
-        transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1)`,
-        willChange: 'transform',
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="w-full flex justify-center">
-        <div className="w-28 h-28 rounded-xl overflow-hidden border-4 border-white/10 bg-gradient-to-br from-purple-700/80 to-blue-700/80 shadow-lg group-hover:scale-105 transition-transform duration-500">
-          <img
-            src={project.image || "/placeholder.svg"}
-            alt={project.title}
-            className="w-full h-full object-cover object-center"
-            style={{ aspectRatio: '1/1' }}
-          />
-        </div>
-      </div>
-      <div className="flex-1 flex flex-col items-center text-center w-full mt-8">
-        <h3 className="text-xl font-extrabold tracking-tight mb-2 text-white drop-shadow-lg leading-tight min-h-[56px] flex items-center justify-center">{project.title}</h3>
-        <p className="text-gray-300 text-base mb-6 font-mono">{project.tech}</p>
-        <button className="w-full mt-auto px-0 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold text-base shadow-md hover:from-purple-600 hover:to-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400 active:scale-95">View Project</button>
-      </div>
-    </motion.div>
-  );
 }

@@ -1,0 +1,50 @@
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-8 border border-white/10"
+            >
+              <form className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">İsim</label>
+                  <input
+                    type="text"
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-blue-400"
+                    placeholder="Adınız"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">E-posta</label>
+                  <input
+                    type="email"
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-blue-400"
+                    placeholder="e-posta@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Mesaj</label>
+                  <textarea
+                    rows={4}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-blue-400 resize-none"
+                    placeholder="Projeniz hakkında bilgi verin..."
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Mesaj Gönder
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 bg-black border-t border-white/10">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-white/60">
+            © 2025 {portfolioData.hero.name}. Tüm hakları saklıdır.
+          </p>
+        </div>
+      </footer>
+    </div>
+  )
+}

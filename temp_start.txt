@@ -1,0 +1,50 @@
+"use client"
+
+import { useEffect, useRef, useState, useLayoutEffect } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { motion, useScroll, useTransform } from "framer-motion"
+import {
+  Github,
+  Linkedin,
+  Mail,
+  ExternalLink,
+  Code,
+  Palette,
+  Zap,
+  Globe,
+  Star,
+  Award,
+  Users,
+  Calendar,
+  ArrowRight,
+  ArrowLeft,
+  ChevronDown,
+  Menu,
+  X,
+} from "lucide-react"
+import Link from "next/link"
+import { AnimatePresence } from "framer-motion"
+import SplashCursor from "../components/SplashCursor";
+
+// Register GSAP plugins
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
+export default function Portfolio() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [currentSection, setCurrentSection] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState(0)
+  const [currentQuote, setCurrentQuote] = useState(0)
+  const [currentMessage, setCurrentMessage] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const { scrollYProgress } = useScroll()
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+
+  // Portfolio Data - Türkçe içerik
+  const portfolioData = {

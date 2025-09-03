@@ -1,0 +1,37 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bg1)" rx="20"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="60" cy="60" r="35" fill="url(#bg2)" opacity="0.3"/>
+  <circle cx="340" cy="240" r="45" fill="url(#bg2)" opacity="0.2"/>
+  
+  <!-- Portfolio/Code icon -->
+  <g transform="translate(150, 100)">
+    <!-- Code brackets -->
+    <text x="20" y="50" fill="white" font-family="monospace" font-size="24" font-weight="bold">{</text>
+    <text x="80" y="50" fill="white" font-family="monospace" font-size="24" font-weight="bold">}</text>
+    <!-- Code lines -->
+    <text x="35" y="35" fill="#667eea" font-family="monospace" font-size="12">const</text>
+    <text x="35" y="50" fill="#667eea" font-family="monospace" font-size="12">portfolio</text>
+    <text x="35" y="65" fill="#667eea" font-family="monospace" font-size="12">= "awesome"</text>
+    <!-- Decorative dots -->
+    <circle cx="30" cy="80" r="2" fill="white" opacity="0.6"/>
+    <circle cx="35" cy="80" r="2" fill="white" opacity="0.6"/>
+    <circle cx="40" cy="80" r="2" fill="white" opacity="0.6"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="280" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">BAHADIR PORTFOLYO</text>
+</svg>
