@@ -18,7 +18,7 @@ export default function ContactPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Merhaba! 👋 Ben Bahadır\'ın dijital asistanıyım. Size nasıl yardımcı olabilirim?',
+      text: 'Merhaba! Ben Bahadır\'ın dijital asistanıyım. Size nasıl yardımcı olabilirim?',
       sender: 'bot',
       timestamp: new Date()
     }
