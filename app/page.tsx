@@ -158,7 +158,7 @@ export default function Portfolio() {
         {
           title: "Silifke Teknoloji",
           description: "Teknoloji ve inovasyon odaklı organizasyon web sitesi. Topluluk odaklı tasarım ve etkileşimli özellikler ile teknoloji meraklılarını bir araya getiren platform.",
-          image: "/silifketeknoloji.png",
+          image: "/silifketeknoloji.webp",
           link: "https://www.silifketeknoloji.org",
           tech: ["Next.js", "React", "Tailwind CSS", "Modern Web"],
           category: "Teknoloji Organizasyonu",
@@ -167,7 +167,7 @@ export default function Portfolio() {
         {
           title: "Bahadır Gemalmaz",
           description: "Kişisel portfolyo ve profesyonel web sitesi. Modern animasyonlar ve etkileşimli tasarım ile kişisel markayı güçlendiren portfolyo platformu.",
-          image: "/portfolio.png",
+          image: "/portfolio.webp",
           link: "https://www.bahadirgemalmaz.com",
           tech: ["Next.js", "React", "Tailwind CSS", "GSAP"],
           category: "Portfolyo Sitesi",
@@ -176,7 +176,7 @@ export default function Portfolio() {
         {
           title: "Simay.tech",
           description: "Web sitesi ve yapay zeka sesli asistan otomasyon sistemleri. AI teknolojileri ile iş süreçlerini otomatikleştiren ve verimliliği artıran akıllı çözümler.",
-          image: "/simay.tech.png",
+          image: "/simay.tech.webp",
           link: "https://simay.tech",
           tech: ["AI/ML", "React", "Python", "Automation"],
           category: "AI & Otomasyon",
@@ -185,7 +185,7 @@ export default function Portfolio() {
         {
           title: "Avax Savunma",
           description: "Askeri outdoor giyim firması için e-ticaret sitesi. Güvenli ödeme sistemi ve kapsamlı ürün kataloğu ile online satışları artıran e-ticaret platformu.",
-          image: "/avaxsavunma.png",
+          image: "/avaxsavunma.webp",
           link: "https://www.avaxsavunma.com.tr",
           tech: ["React", "Node.js", "MongoDB", "E-commerce"],
           category: "E-ticaret Sitesi",
@@ -194,7 +194,7 @@ export default function Portfolio() {
         {
           title: "Vertex Yapı",
           description: "Kaba inşaat firması için profesyonel web sitesi. Sektörel ihtiyaçlara özel tasarım ve güçlü SEO optimizasyonu ile müşteri portföyünü genişleten kurumsal platform.",
-          image: "/vertexyapi.png",
+          image: "/vertexyapi.webp",
           link: "https://www.vertexyapi.com",
           tech: ["React", "Next.js", "Tailwind CSS", "SEO"],
           category: "Kurumsal Web Sitesi",
@@ -203,7 +203,7 @@ export default function Portfolio() {
         {
           title: "Effe Mimarlık",
           description: "Site ve villa projeleri için kurumsal web sitesi. Modern tasarım ve kullanıcı dostu arayüz ile mimarlık firmasının dijital varlığını güçlendiren profesyonel web sitesi.",
-          image: "/effemimarlik.png",
+          image: "/effemimarlik.webp",
           link: "https://www.effemimarlik.com.tr",
           tech: ["WordPress", "PHP", "CSS", "Responsive Design"],
           category: "Kurumsal Web Sitesi",
