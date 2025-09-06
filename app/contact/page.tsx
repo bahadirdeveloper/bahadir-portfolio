@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, Send, Phone, Mail, MapPin, Github, Linkedin, Twitter, MessageCircle, X, Minimize2, Maximize2 } from "lucide-react"
+import { ArrowLeft, Send, Phone, Mail, MapPin, Github, Linkedin, Instagram, MessageCircle, X, Minimize2, Maximize2 } from "lucide-react"
 import Link from "next/link"
 
 interface Message {
@@ -185,7 +185,7 @@ export default function ContactPage() {
                   <Mail className="text-purple-400" size={24} />
                   <div>
                     <p className="font-semibold">E-posta</p>
-                    <p className="text-purple-200">bahadirdevpro@gmail.com</p>
+                    <p className="text-purple-200">bahdevpro@gmail.com</p>
                   </div>
                 </motion.div>
 
@@ -216,7 +216,9 @@ export default function ContactPage() {
                 <h3 className="text-xl font-bold mb-4">Beni Takip Et</h3>
                 <div className="flex gap-4">
                   <motion.a
-                    href="#"
+                    href="https://github.com/bahadirgemalmaz"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-purple-600 transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
@@ -224,7 +226,9 @@ export default function ContactPage() {
                     <Github size={24} />
                   </motion.a>
                   <motion.a
-                    href="#"
+                    href="https://linkedin.com/in/bahadirgemalmaz"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-blue-600 transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
@@ -232,12 +236,14 @@ export default function ContactPage() {
                     <Linkedin size={24} />
                   </motion.a>
                   <motion.a
-                    href="#"
-                    className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-blue-400 transition-colors"
+                    href="https://instagram.com/bahadirgemalmaz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-pink-600 transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Twitter size={24} />
+                    <Instagram size={24} />
                   </motion.a>
                 </div>
               </div>

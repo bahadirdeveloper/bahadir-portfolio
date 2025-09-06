@@ -95,9 +95,9 @@ export default function Portfolio() {
         "Benim için teknoloji yalnızca bir iş değil; birlikte üretmenin, öğrenmenin ve büyümenin yolu. Doğru ekiple bir araya geldiğimizde, deniz kenarında kahvemizi yudumlarken bile dünyayı değiştirecek fikirler geliştirebileceğimize inanıyorum."
       ],
       socials: {
-        github: "",
-        linkedin: "",
-        email: "",
+        github: "https://github.com/bahadirgemalmaz",
+        linkedin: "https://linkedin.com/in/bahadirgemalmaz",
+        email: "bahdevpro@gmail.com",
         cv: "/cv.pdf"
       },
       references: [
@@ -272,9 +272,9 @@ export default function Portfolio() {
     contact: {
       title: "Projenizi Konuşalım",
       subtitle: "Hayalinizdeki projeyi gerçeğe dönüştürmek için buradayım",
-      email: "bahadir@example.com",
-      phone: "+90 555 123 45 67",
-      location: "İstanbul, Türkiye"
+      email: "bahdevpro@gmail.com",
+      phone: "+90 533 238 33 91",
+      location: "Mersin, Silifke"
     }
   }
 
@@ -425,7 +425,19 @@ export default function Portfolio() {
               let sectionIndex = index + 1;
               if (item === "Projeler") sectionIndex = 3;
               if (item === "Yetenekler") sectionIndex = 4;
-              if (item === "İletişim") sectionIndex = 6;
+              if (item === "İletişim") {
+                return (
+                  <button
+                    key={item}
+                    onClick={() => window.location.href = '/contact'}
+                    className={`text-sm font-medium transition-colors hover:text-blue-400 modern-focus ${
+                      currentSection === 6 ? "text-blue-400" : "text-white/70"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                );
+              }
               
               return (
                 <button
@@ -527,6 +539,12 @@ export default function Portfolio() {
               className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-500 hover:via-purple-500 hover:to-pink-500 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 btn-modern modern-focus shadow-2xl shadow-purple-500/25 hover:shadow-purple-500/40"
             >
               Projelerimi Gör
+            </button>
+            <button
+              onClick={() => window.location.href = '/contact'}
+              className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 btn-modern modern-focus shadow-2xl shadow-green-500/25 hover:shadow-green-500/40"
+            >
+              İletişim
             </button>
           </motion.div>
         </div>
@@ -952,6 +970,12 @@ export default function Portfolio() {
                     className="border border-white/30 hover:border-white/50 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105"
                   >
                     Yeteneklerimi Keşfet
+                  </button>
+                  <button 
+                    onClick={() => window.location.href = '/contact'}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border border-green-400/50"
+                  >
+                    İletişime Geç
                   </button>
                 </div>
               </div>
@@ -1545,7 +1569,7 @@ export default function Portfolio() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
-                    onClick={() => scrollToSection(6)}
+                    onClick={() => window.location.href = '/contact'}
                     className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border border-green-400/50 shadow-lg shadow-green-500/25"
                   >
                     <Handshake className="w-5 h-5 mr-2 inline" />
