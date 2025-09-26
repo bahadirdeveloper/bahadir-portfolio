@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { MessageCircle, Linkedin, Mail, Star, Users, Clock, Award } from "lucide-react"
+import { MessageCircle, Linkedin, Mail, Star, Users, Clock, Award, Sparkles } from "lucide-react"
 
 interface FinalCTAProps {
   phoneNumber?: string
@@ -42,134 +42,126 @@ export default function FinalCTA({
 
   return (
     <>
-      {/* Main CTA Section */}
-      <section id="iletisim" className="py-20 bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
-        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-pink-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-6 relative z-10">
+      <section id="iletisim" className="relative overflow-hidden py-24 md:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.08),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(147,51,234,0.08),transparent_50%)]" />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] p-10 md:p-16 lg:p-20 backdrop-blur-xl shadow-[0_40px_120px_rgba(0,0,0,0.45)]"
           >
-            <h2 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Birlikte yeni başarı hikayeleri yazalım
-            </h2>
-            <p className="text-xl md:text-2xl text-white/70 font-medium max-w-3xl mx-auto leading-relaxed">
-              Projelerinde hız, güvenilirlik ve yaratıcılığı birleştiriyorum. Fikrini hayata geçirelim.
-            </p>
-          </motion.div>
+            <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-gradient-to-br from-emerald-400/10 via-teal-400/5 to-transparent blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-32 -left-20 h-64 w-64 rounded-full bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-transparent blur-3xl" />
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-          >
-            {/* WhatsApp CTA - Primary */}
-            <motion.a
-              href={`${whatsappUrl}&utm_source=portfolio&utm_medium=cta&utm_campaign=footer`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleCTAClick('whatsapp')}
-              className="group relative w-full sm:w-auto"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-500 hover:via-green-400 hover:to-green-500 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:shadow-2xl hover:shadow-green-500/40 border border-green-400/50 flex items-center justify-center gap-3">
-                <MessageCircle className="w-6 h-6" />
-                <span>WhatsApp'tan Hemen Yaz</span>
-              </div>
-            </motion.a>
-
-            {/* LinkedIn CTA - Secondary */}
-            <motion.a
-              href={`${linkedinUrl}?utm_source=portfolio&utm_medium=cta&utm_campaign=footer`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleCTAClick('linkedin')}
-              className="group relative w-full sm:w-auto"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="bg-transparent border-2 border-blue-400 hover:bg-blue-400/10 text-blue-400 hover:text-blue-300 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:shadow-2xl hover:shadow-blue-500/40 flex items-center justify-center gap-3">
-                <Linkedin className="w-6 h-6" />
-                <span>LinkedIn'de Bağlantı Kur</span>
-              </div>
-            </motion.a>
-
-            {/* Email CTA - Secondary */}
-            <motion.a
-              href={`${emailUrl}&utm_source=portfolio&utm_medium=cta&utm_campaign=footer`}
-              onClick={() => handleCTAClick('email')}
-              className="group relative w-full sm:w-auto"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/30 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:shadow-2xl hover:shadow-white/20 flex items-center justify-center gap-3">
-                <Mail className="w-6 h-6" />
-                <span>E-posta Gönder</span>
-              </div>
-            </motion.a>
-          </motion.div>
-
-          {/* Micro Statistics */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
-          >
-            {stats.map((stat, index) => (
+            <div className="relative grid gap-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
               <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.1 * index }}
-                className="text-center group"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                viewport={{ once: true }}
+                className="space-y-8"
               >
-                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-blue-400/50 transition-all duration-300 hover:bg-white/10">
-                  <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <stat.icon className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-white/60">{stat.label}</div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
+                  <Sparkles className="h-4 w-4 text-emerald-200" />
+                  Premium iş ortaklığı
+                </span>
+                <div className="space-y-5">
+                  <h2 className="font-display text-4xl leading-tight text-white md:text-5xl">
+                    Birlikte yeni başarı hikayeleri yazalım
+                  </h2>
+                  <p className="max-w-2xl text-base text-white/70 md:text-lg">
+                    Projelerinde hız, şeffaflık ve ölçülebilir sonuçları bir araya getiriyorum. Fikrini premium deneyimle hayata geçirelim.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap md:gap-6">
+                  <motion.a
+                    href={`${whatsappUrl}&utm_source=portfolio&utm_medium=cta&utm_campaign=footer`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleCTAClick('whatsapp')}
+                    className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-emerald-200/50 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 px-8 py-4 font-semibold text-black shadow-[0_20px_45px_rgba(16,185,129,0.35)] transition-all duration-300 hover:shadow-[0_28px_60px_rgba(16,185,129,0.4)] sm:w-auto"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                    <span>WhatsApp&apos;tan Hemen Yaz</span>
+                  </motion.a>
+
+                  <motion.a
+                    href={`${linkedinUrl}?utm_source=portfolio&utm_medium=cta&utm_campaign=footer`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleCTAClick('linkedin')}
+                    className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-white/10 bg-white/5 px-8 py-4 font-semibold text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white sm:w-auto"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                  >
+                    <Linkedin className="h-5 w-5" />
+                    <span>LinkedIn&apos;de Bağlantı Kur</span>
+                  </motion.a>
+
+                  <motion.a
+                    href={`${emailUrl}&utm_source=portfolio&utm_medium=cta&utm_campaign=footer`}
+                    onClick={() => handleCTAClick('email')}
+                    className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-white/10 px-8 py-4 font-semibold text-white/70 transition-all duration-300 hover:border-white/20 hover:text-white sm:w-auto"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                  >
+                    <Mail className="h-5 w-5" />
+                    <span>E-posta Gönder</span>
+                  </motion.a>
+                </div>
+
+                <div className="border-l border-white/10 pl-6 text-white/60">
+                  <p className="text-sm italic md:text-base">
+                    &ldquo;Müşterilerimle şeffaf süreç, hızlı teslim ve kalıcı kalite odaklı çalışırım.&rdquo;
+                  </p>
+                  <p className="mt-3 text-xs uppercase tracking-[0.28em] text-white/40">
+                    İlk geri dönüş 24 saat içinde
+                  </p>
                 </div>
               </motion.div>
-            ))}
-          </motion.div>
 
-          {/* Social Proof */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mb-12"
-          >
-            <p className="text-white/80 text-lg italic max-w-2xl mx-auto">
-              "Müşterilerimle şeffaf süreç, hızlı teslim ve kalıcı kalite odaklı çalışırım."
-            </p>
-          </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-2 gap-4">
+                  {stats.map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.08 * index }}
+                      viewport={{ once: true }}
+                      className="rounded-2xl border border-white/10 bg-black/45 p-5 backdrop-blur-lg transition-colors hover:border-emerald-200/40 hover:bg-white/10"
+                    >
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-emerald-200">
+                        <stat.icon className="h-5 w-5" />
+                      </div>
+                      <div className="text-2xl font-semibold text-white">{stat.value}</div>
+                      <div className="text-sm text-white/60">{stat.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
 
-          {/* Signature */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-center"
-          >
-            <div className="bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20">
-              <h3 className="text-2xl font-bold text-white mb-2">
-                Bahadır Gemalmaz — Web Tasarımcısı & Otomasyon Uzmanı
-              </h3>
-              <p className="text-white/70 italic text-lg">
-                "Bugünün çabası, yarının referansı."
-              </p>
+                <div className="rounded-2xl border border-white/10 bg-black/40 p-6 text-white/70 backdrop-blur-lg shadow-[0_24px_65px_rgba(0,0,0,0.35)]">
+                  <h3 className="text-lg font-semibold text-white">
+                    Bahadır Gemalmaz — Web Tasarımcısı & Otomasyon Uzmanı
+                  </h3>
+                  <p className="mt-2 text-sm italic text-white/60">
+                    &ldquo;Bugünün çabası, yarının referansı.&rdquo;
+                  </p>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
@@ -188,9 +180,9 @@ export default function FinalCTA({
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        <div className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white px-4 py-3 rounded-full shadow-2xl shadow-green-500/50 border border-green-400/50 flex items-center gap-2 transition-all duration-300">
-          <MessageCircle className="w-5 h-5" />
-          <span className="font-semibold text-sm">Yaz</span>
+        <div className="flex items-center gap-2 rounded-full border border-emerald-200/50 bg-gradient-to-r from-emerald-400 to-teal-400 px-4 py-3 font-semibold text-black shadow-[0_20px_45px_rgba(16,185,129,0.35)] transition-all duration-300">
+          <MessageCircle className="h-5 w-5" />
+          <span className="text-sm">Yaz</span>
         </div>
       </motion.a>
     </>

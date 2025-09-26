@@ -1,9 +1,19 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const sans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+})
+
+const display = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-display",
+})
 
 export const metadata: Metadata = {
   title: "Bahadır Gemalmaz - Web Tasarımcısı & Otomasyon Uzmanı | Mersin Silifke",
@@ -83,7 +93,6 @@ export default function RootLayout({
   return (
     <html lang="tr" className="dark">
       <head>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -97,8 +106,8 @@ export default function RootLayout({
               "image": "https://www.bahadirgemalmaz.com/profile.png",
               "sameAs": [
                 "https://www.linkedin.com/in/bahad%C4%B1r-gemalmaz-839632379/",
-                "https://github.com/bahadirgemalmaz",
-                "https://instagram.com/bahadirgemalmaz"
+                "https://github.com/bahadirdeveloper",
+                "https://www.instagram.com/silifketechnology/"
               ],
               "contactPoint": [
                 {
@@ -136,7 +145,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+      <body className={`${sans.variable} ${display.variable} font-sans min-h-screen flex flex-col bg-black text-white`}>
         <main className="flex-1">{children}</main>
       </body>
     </html>

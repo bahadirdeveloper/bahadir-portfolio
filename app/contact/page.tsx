@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, Send, Phone, Mail, MapPin, Github, Linkedin, Instagram, MessageCircle, X, Minimize2, Maximize2 } from "lucide-react"
+import { ArrowLeft, Send, Phone, Mail, MapPin, Github, Linkedin, Instagram, MessageCircle, X, Minimize2, Maximize2, Sparkles } from "lucide-react"
 import Link from "next/link"
 
 interface Message {
@@ -103,13 +103,18 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-[#050608] to-black text-white">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-56 left-1/2 hidden h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.18),transparent_65%)] blur-3xl lg:block" />
+        <div className="absolute bottom-[-160px] right-[-80px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.18),transparent_60%)] blur-[160px]" />
+      </div>
+
       {/* Animated Background Dots */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-30"
+            className="absolute h-1 w-1 rounded-full bg-white/40"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -117,7 +122,7 @@ export default function ContactPage() {
             animate={{
               y: [-20, 20],
               x: [-10, 10],
-              opacity: [0.3, 0.8, 0.3],
+              opacity: [0.2, 0.7, 0.2],
             }}
             transition={{
               duration: 3 + Math.random() * 2,
@@ -130,171 +135,206 @@ export default function ContactPage() {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="p-8">
+        <header className="px-6 py-10 sm:px-10">
           <Link href="/">
             <motion.div
-              className="flex items-center gap-2 text-white hover:text-purple-300 transition-colors cursor-pointer"
-              whileHover={{ x: -5 }}
+              className="inline-flex items-center gap-2 text-white/70 transition-colors hover:text-white"
+              whileHover={{ x: -6 }}
             >
-              <ArrowLeft size={24} />
-              <span className="font-bold">Portfolyoya Dön</span>
+              <ArrowLeft size={22} />
+              <span className="text-sm font-semibold uppercase tracking-[0.24em]">
+                Portfolyoya Dön
+              </span>
             </motion.div>
           </Link>
         </header>
 
-        <div className="max-w-6xl mx-auto pt-32 pb-32 px-4 md:px-8 lg:px-16">
-          <motion.h1
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-8 text-center"
-            initial={{ opacity: 0, y: 50 }}
+        <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 lg:px-8 lg:pt-24">
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] p-8 shadow-[0_35px_120px_rgba(0,0,0,0.55)] backdrop-blur-2xl md:p-14 lg:p-20"
           >
-            CHATBOT İLE KONUŞALIM
-          </motion.h1>
+            <div className="pointer-events-none absolute -left-20 top-24 h-56 w-56 rounded-full bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-transparent blur-3xl" />
+            <div className="pointer-events-none absolute -top-24 right-10 h-52 w-52 rounded-full bg-gradient-to-br from-emerald-400/10 via-teal-400/5 to-transparent blur-3xl" />
+            <div className="pointer-events-none absolute bottom-[-100px] left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-gradient-to-br from-sky-400/10 via-purple-400/10 to-transparent blur-3xl" />
 
-          <motion.p
-            className="text-xl text-center text-purple-200 mb-16 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            WhatsApp benzeri modern chatbot ile projelerinizi tartışalım. Hızlı, kolay ve etkili iletişim!
-          </motion.p>
+            <div className="relative text-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
+                <Sparkles className="h-4 w-4 text-emerald-200" />
+                Premium iletişim
+              </span>
+              <h1 className="mt-6 font-display text-4xl tracking-tight text-white md:text-5xl lg:text-6xl">
+                <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Chatbot ile konuşalım
+                </span>
+              </h1>
+              <p className="mx-auto mt-6 max-w-2xl text-base text-white/70 md:text-lg">
+                WhatsApp benzeri modern chatbot ile projeni birlikte değerlendirelim. İlk strateji mesajından canlı teslimata kadar şeffaf, hızlı ve ölçülebilir bir sürece hazır ol.
+              </p>
+            </div>
 
-          <div className="grid lg:grid-cols-2 gap-16">
-            {/* Contact Information */}
-            <motion.div
-              className="space-y-8"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="mb-12">
-                <div className="w-32 h-32 mx-auto lg:mx-0 mb-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center overflow-hidden">
-                  <img src="/profile.png" alt="Bahadır Gemalmaz" className="w-28 h-28 object-cover rounded-full" />
+            <div className="relative mt-16 grid gap-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:gap-16">
+              <motion.div
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="space-y-10"
+              >
+                <div className="rounded-[28px] border border-white/10 bg-black/45 p-8 text-center shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-left">
+                  <div className="mx-auto mb-6 h-28 w-28 rounded-full border border-white/10 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 p-[2px] md:mx-0">
+                    <div className="h-full w-full rounded-full bg-black/70 p-1.5">
+                      <img src="/profile.png" alt="Bahadır Gemalmaz" className="h-full w-full rounded-full object-cover" />
+                    </div>
+                  </div>
+                  <h2 className="text-3xl font-bold text-white">Bahadır Gemalmaz</h2>
+                  <p className="mt-2 text-lg text-white/65">Web Tasarımcısı & Otomasyon Uzmanı</p>
+                  <p className="mt-6 text-sm text-white/60 md:text-base">
+                    Markaların premium dijital deneyimlerini tasarlarken aynı zamanda otomasyonla süreçlerini hızlandırıyorum. Şeffaf iş akışı, dokümante iletişim ve performans odaklı yaklaşım.
+                  </p>
                 </div>
-                <h2 className="text-3xl font-black mb-2">Bahadır Gemalmaz</h2>
-                <p className="text-purple-300 text-lg">Web Tasarımcısı & Otomasyon Uzmanı</p>
-              </div>
 
-              <div className="space-y-6">
-                <motion.div
-                  className="flex items-center gap-4 p-4 bg-black/30 rounded-lg backdrop-blur-sm"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <Mail className="text-purple-400" size={24} />
-                  <div>
-                    <p className="font-semibold">E-posta</p>
-                    <p className="text-purple-200">bahdevpro@gmail.com</p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-center gap-4 p-4 bg-black/30 rounded-lg backdrop-blur-sm"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <Phone className="text-purple-400" size={24} />
-                  <div>
-                    <p className="font-semibold">Telefon</p>
-                    <p className="text-purple-200">+90 533 238 33 91</p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-center gap-4 p-4 bg-black/30 rounded-lg backdrop-blur-sm"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <MapPin className="text-purple-400" size={24} />
-                  <div>
-                    <p className="font-semibold">Konum</p>
-                    <p className="text-purple-200">Mersin, Silifke</p>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="pt-8">
-                <h3 className="text-xl font-bold mb-4">Beni Takip Et</h3>
-                <div className="flex gap-4">
-                  <motion.a
-                    href="https://github.com/bahadirgemalmaz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-purple-600 transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <motion.div
+                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/45 p-5 backdrop-blur-lg transition-all hover:border-emerald-200/40"
+                    whileHover={{ scale: 1.02 }}
                   >
-                    <Github size={24} />
-                  </motion.a>
-                  <motion.a
-                    href="https://linkedin.com/in/bahadirgemalmaz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-blue-600 transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-emerald-200">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">E-posta</p>
+                      <p className="text-sm text-white/60">bahdevpro@gmail.com</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/45 p-5 backdrop-blur-lg transition-all hover:border-emerald-200/40"
+                    whileHover={{ scale: 1.02 }}
                   >
-                    <Linkedin size={24} />
-                  </motion.a>
-                  <motion.a
-                    href="https://instagram.com/bahadirgemalmaz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-black/30 rounded-lg backdrop-blur-sm hover:bg-pink-600 transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-emerald-200">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Telefon</p>
+                      <p className="text-sm text-white/60">+90 533 238 33 91</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/45 p-5 backdrop-blur-lg transition-all hover:border-emerald-200/40 md:col-span-2"
+                    whileHover={{ scale: 1.02 }}
                   >
-                    <Instagram size={24} />
-                  </motion.a>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-emerald-200">
+                      <MapPin className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Konum</p>
+                      <p className="text-sm text-white/60">Mersin, Silifke</p>
+                    </div>
+                  </motion.div>
                 </div>
-              </div>
-            </motion.div>
 
-            {/* Chatbot Interface */}
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              {/* Chatbot Preview */}
-              <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 h-[600px] flex flex-col">
-                <div className="text-center mb-8">
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <MessageCircle className="text-white" size={32} />
+                <div className="rounded-2xl border border-white/10 bg-black/45 p-6 text-white/70 backdrop-blur-lg">
+                  <p className="text-sm uppercase tracking-[0.28em] text-white/40">Çalışma yaklaşımı</p>
+                  <p className="mt-4 text-sm text-white/70 md:text-base">
+                    İlk 24 saat içinde projenize geri dönüş, sonrasında net zaman çizelgesi ve şeffaf raporlama. Tasarım, geliştirme ve otomasyon adımlarını birlikte planlıyoruz.
+                  </p>
+                  <ul className="mt-6 space-y-2 text-sm text-white/60">
+                    <li>- 45 dakikalık keşif görüşmesi</li>
+                    <li>- Mikro teslimatlar ve haftalık durum raporu</li>
+                    <li>- Metriğe bağlı karar alma ve iyileştirme</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-sm uppercase tracking-[0.28em] text-white/40">Beni takip et</p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <motion.a
+                      href="https://github.com/bahadirdeveloper"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/70 transition-colors hover:border-emerald-200/40 hover:text-white"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Github size={22} />
+                    </motion.a>
+                    <motion.a
+                      href="https://linkedin.com/in/bahadirgemalmaz"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/70 transition-colors hover:border-emerald-200/40 hover:text-white"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Linkedin size={22} />
+                    </motion.a>
+                    <motion.a
+                      href="https://www.instagram.com/silifketechnology/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/70 transition-colors hover:border-emerald-200/40 hover:text-white"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Instagram size={22} />
+                    </motion.a>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">Dijital Asistan</h3>
-                  <p className="text-purple-200">Projelerinizi tartışmak için chatbot\'u başlatın</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex flex-col rounded-[28px] border border-white/10 bg-black/55 p-8 shadow-[0_24px_65px_rgba(0,0,0,0.45)] backdrop-blur-2xl"
+              >
+                <div className="text-center">
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-200/40 bg-gradient-to-br from-emerald-400/20 via-teal-400/20 to-transparent">
+                    <MessageCircle className="h-7 w-7 text-emerald-200" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-white">Dijital Asistan</h3>
+                  <p className="mt-3 text-sm text-white/65">
+                    Projenizin detaylarını paylaşın, dakikalar içinde bir keşif akışı başlatalım.
+                  </p>
                 </div>
 
                 <motion.button
                   onClick={() => setChatOpen(true)}
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 flex items-center justify-center gap-3"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="mt-10 inline-flex items-center justify-center gap-3 rounded-full border border-emerald-200/40 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 px-8 py-4 font-semibold text-black transition-all duration-300 hover:shadow-[0_25px_55px_rgba(16,185,129,0.4)]"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  <MessageCircle size={24} />
-                  <span>Chatbot\'u Başlat</span>
+                  <MessageCircle className="h-5 w-5" />
+                  <span>Chatbot&apos;u Başlat</span>
                 </motion.button>
 
-                <div className="mt-8 text-center">
-                  <p className="text-sm text-purple-300 mb-4">Hızlı başlangıç için:</p>
-                  <div className="grid grid-cols-2 gap-2">
+                <div className="mt-10 text-center">
+                  <p className="text-xs uppercase tracking-[0.32em] text-white/45">
+                    Hızlı başlangıç
+                  </p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     {quickReplies.map((reply, index) => (
                       <motion.button
                         key={index}
                         onClick={() => handleQuickReply(reply)}
-                        className="p-3 bg-black/20 rounded-lg text-sm hover:bg-purple-600/30 transition-colors"
+                        className="rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm text-white/70 transition-all hover:border-emerald-200/40 hover:bg-white/[0.12]"
                         whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileTap={{ scale: 0.96 }}
                       >
                         {reply}
                       </motion.button>
                     ))}
                   </div>
+                  <p className="mt-6 text-xs text-white/40">
+                    İlk mesajınıza <span className="text-emerald-200">24 saat</span> içinde dönüş.
+                  </p>
                 </div>
-              </div>
-            </motion.div>
-          </div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
@@ -303,33 +343,33 @@ export default function ContactPage() {
         {chatOpen && (
           <motion.div
             className="fixed bottom-6 right-6 z-50"
-            initial={{ opacity: 0, scale: 0.8, y: 100 }}
+            initial={{ opacity: 0, scale: 0.85, y: 90 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 100 }}
+            exit={{ opacity: 0, scale: 0.85, y: 90 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="bg-white text-gray-800 rounded-2xl shadow-2xl w-96 h-[500px] flex flex-col">
+            <div className="flex h-[500px] w-96 flex-col rounded-2xl border border-white/10 bg-black/90 text-white shadow-[0_24px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl">
               {/* Chat Header */}
-              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+              <div className="flex items-center justify-between rounded-t-2xl border-b border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                    <MessageCircle size={20} />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-200/40 bg-gradient-to-br from-emerald-400/20 via-teal-400/20 to-transparent">
+                    <MessageCircle size={18} className="text-emerald-200" />
                   </div>
                   <div>
-                    <h4 className="font-bold">Bahadır Asistan</h4>
-                    <p className="text-xs opacity-90">Çevrimiçi</p>
+                    <h4 className="text-sm font-semibold text-white">Bahadır Asistan</h4>
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-white/40">Çevrimiçi</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsMinimized(!isMinimized)}
-                    className="p-1 hover:bg-white/20 rounded transition-colors"
+                    className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     {isMinimized ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
                   </button>
                   <button
                     onClick={() => setChatOpen(false)}
-                    className="p-1 hover:bg-white/20 rounded transition-colors"
+                    className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     <X size={16} />
                   </button>
@@ -339,61 +379,59 @@ export default function ContactPage() {
               {/* Chat Messages */}
               {!isMinimized && (
                 <>
-                  <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-                    <div className="space-y-4">
-                      {messages.map((message) => (
-                        <motion.div
-                          key={message.id}
-                          className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3 }}
+                  <div className="flex-1 space-y-4 overflow-y-auto bg-black/60 px-5 py-6">
+                    {messages.map((message) => (
+                      <motion.div
+                        key={message.id}
+                        className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div
+                          className={`max-w-xs rounded-2xl px-4 py-2 lg:max-w-md ${
+                            message.sender === 'user'
+                              ? 'rounded-br-md bg-gradient-to-r from-emerald-400 to-teal-400 text-black shadow-[0_12px_30px_rgba(16,185,129,0.35)]'
+                              : 'rounded-bl-md border border-white/10 bg-white/10 text-white/80 backdrop-blur-lg'
+                          }`}
                         >
-                          <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                              message.sender === 'user'
-                                ? 'bg-green-500 text-white rounded-br-md'
-                                : 'bg-white text-gray-800 rounded-bl-md shadow-sm'
-                            }`}
-                          >
-                            <p className="text-sm">{message.text}</p>
-                            <p className={`text-xs mt-1 ${
-                              message.sender === 'user' ? 'text-green-100' : 'text-gray-500'
-                            }`}>
-                              {message.timestamp.toLocaleTimeString('tr-TR', { 
-                                hour: '2-digit', 
-                                minute: '2-digit' 
-                              })}
-                            </p>
-                          </div>
-                        </motion.div>
-                      ))}
-                      
-                      {isTyping && (
-                        <motion.div
-                          className="flex justify-start"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                        >
-                          <div className="bg-white text-gray-800 rounded-2xl rounded-bl-md shadow-sm px-4 py-2">
-                            <div className="flex items-center gap-1">
-                              <div className="flex gap-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                              </div>
-                              <span className="text-xs text-gray-500 ml-2">Yazıyor...</span>
+                          <p className="text-sm leading-5">{message.text}</p>
+                          <p className={`mt-2 text-[11px] ${
+                            message.sender === 'user' ? 'text-black/70' : 'text-white/40'
+                          }`}>
+                            {message.timestamp.toLocaleTimeString('tr-TR', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    {isTyping && (
+                      <motion.div
+                        className="flex justify-start"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        <div className="rounded-2xl rounded-bl-md border border-white/10 bg-white/10 px-4 py-2 text-white/70 backdrop-blur-lg">
+                          <div className="flex items-center gap-2">
+                            <div className="flex gap-1">
+                              <div className="h-2 w-2 animate-bounce rounded-full bg-white/50" />
+                              <div className="h-2 w-2 animate-bounce rounded-full bg-white/50" style={{ animationDelay: '0.1s' }} />
+                              <div className="h-2 w-2 animate-bounce rounded-full bg-white/50" style={{ animationDelay: '0.2s' }} />
                             </div>
+                            <span className="text-[11px] text-white/40">Yazıyor...</span>
                           </div>
-                        </motion.div>
-                      )}
-                    </div>
+                        </div>
+                      </motion.div>
+                    )}
                     <div ref={messagesEndRef} />
                   </div>
 
                   {/* Chat Input */}
-                  <div className="p-4 bg-white border-t border-gray-200">
-                    <div className="flex gap-2">
+                  <div className="border-t border-white/10 bg-black/80 px-5 py-4">
+                    <div className="flex items-center gap-2">
                       <input
                         ref={inputRef}
                         type="text"
@@ -401,12 +439,12 @@ export default function ContactPage() {
                         onChange={(e) => setInputMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="Mesajınızı yazın..."
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                        className="flex-1 rounded-full border border-white/10 bg-black/60 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-emerald-200/40 focus:outline-none focus:ring-1 focus:ring-emerald-200/40"
                       />
                       <motion.button
                         onClick={handleSendMessage}
                         disabled={!inputMessage.trim()}
-                        className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-full border border-emerald-200/40 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 p-2 text-black transition-all duration-200 hover:shadow-[0_12px_28px_rgba(16,185,129,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
