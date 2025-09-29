@@ -83,7 +83,7 @@ const portfolioData = {
   },
   hero: {
     name: "Bahadır Gemalmaz",
-    title: "Dijital markalar için lüks deneyimler tasarlayan ürün ve otomasyon lideri",
+    title: "Mersin ve Silifke'nin önde gelen web tasarım ve yapay zeka uzmanı",
     leftMessages: [
       "Pixel-perfect demek, Bahadır'ın imzası demektir.",
       "Kahve, kod ve mikro etkileşim üçlüsü.",
@@ -118,9 +118,9 @@ const portfolioData = {
   about: {
     photo: "/profile.png",
     description: [
-      "Merhaba, ben Bahadır. Web tasarımı ve otomasyon alanlarında uzmanlaşmış, performans odaklı dijital ürünler geliştiriyorum. Markaların ihtiyacını anlamak, buna uygun deneyimler tasarlamak ve otomasyonla güçlendirmek odak noktam.",
-      "Silifke Teknoloji Kulübü'nü kurarak gençlerle birlikte \"vibe coding\" kültürünü yaygınlaştırıyorum. Yereldeki sorunları teknolojiyle dönüştürürken aynı zamanda sürdürülebilir iş modelleri oluşturuyoruz.",
-      "Amacım, stratejisi belirli, metriği ölçülebilir ve etkisi yüksek işler üretmek. Doğru ekip ve net yol haritası ile kıyıda kahve içerken bile dünyayı değiştirecek fikirler geliştirilebilir.",
+      "Merhaba, ben Bahadır. Mersin ve Silifke bölgesinde web tasarımı, yapay zeka ve otomasyon alanlarında uzmanlaşmış, performans odaklı dijital çözümler geliştiriyorum. Yerel işletmelerin dijital dönüşümüne odaklanarak, AI entegrasyonu ile %300'e varan satış artışları sağlıyorum.",
+      "Silifke Teknoloji Kulübü'nü kurarak bölgedeki teknoloji ekosistemini güçlendiriyorum. Mersin ve Silifke'deki işletmelerin yapay zeka, otomasyon ve modern web teknolojileri ile büyümesine katkı sağlıyorum.",
+      "Hedefim, Mersin ve Silifke'deki her işletmenin dijital varlığını güçlendirmek. Stratejik yaklaşım, ölçülebilir sonuçlar ve sürdürülebilir büyüme odaklı çözümlerle bölgenin teknoloji lideri olmaya devam ediyorum.",
     ],
     socials: {
       github: "https://github.com/bahadirdeveloper",
@@ -627,12 +627,12 @@ export default function PortfolioLanding() {
 
               <div className="space-y-6">
                 <h1 className="font-display text-4xl leading-tight text-white sm:text-5xl md:text-6xl">
-                  Dijital markalar için
+                  Mersin ve Silifke'de
                   <span className="mx-2 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-1 text-2xl md:text-3xl">
                     <Sparkles className="h-5 w-5 text-blue-200" />
-                    premium deneyimler
+                    yapay zeka
                   </span>
-                  tasarlıyorum.
+                  ile büyüyen web siteleri tasarlıyorum.
                 </h1>
 
                 <AnimatePresence mode="wait">
@@ -850,7 +850,7 @@ export default function PortfolioLanding() {
               </div>
 
               <div className="space-y-8 text-white/80">
-                <h2 className="font-display text-4xl text-white">Stratejiyi tasarımla, tasarımı otomasyonla birleştiren lider.</h2>
+                <h2 className="font-display text-4xl text-white">Mersin ve Silifke'nin teknoloji lideri, yapay zeka ile büyüyen işletmelerin ortağı.</h2>
                 {portfolioData.about.description.map((paragraph, idx) => (
                   <p key={idx} className="text-base leading-relaxed text-white/70">
                     {paragraph}
